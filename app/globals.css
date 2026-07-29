@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  /* Cinematic dark neutrals -- deep black base, graphite surface steps. */
+  --background: #050505;
+  --surface: #111111;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --surface-hover: #262626;
+  --border: #2c2c2c;
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --foreground: #f3f1ec;
+  --muted: #a6a39c;
+  --muted-2: #6e6b65;
+
+  /* Warm English-willow tones -- decorative use only (badges, dividers,
+     icons, progress). Never a large interactive surface. */
+  --wood: #c89b6d;
+  --walnut: #8d6748;
+
+  /* Interactive / navigation / selection / focus. */
+  --blue: #5b93ff;
+  --blue-dim: #3d6fe0;
+
+  /* Wickets, alerts, critical, live. */
+  --red: #e5484d;
+  --red-dim: #b93338;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --radius-card: 16px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-wood: var(--wood);
+  --color-walnut: var(--walnut);
+  --color-blue: var(--blue);
+  --color-blue-dim: var(--blue-dim);
+  --color-red: var(--red);
+  --color-red-dim: var(--red-dim);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-card: var(--radius-card);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+html {
+  color-scheme: dark;
+}
+body {
+  font-family: var(--font-sans), -apple-system, "Segoe UI", sans-serif;
+  color: var(--foreground);
+  background: #000;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+::selection {
+  background: rgba(200, 155, 109, 0.3);
+  color: #fff;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Real app shell: edge-to-edge full-bleed on an actual phone (the common
+   case), framed and centered as a preview once the window is wide enough
+   to be a desktop browser. */
+#app {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 14% 6%, rgba(11, 30, 61, 0.16), transparent 40%),
+    radial-gradient(circle at 88% 94%, rgba(74, 16, 21, 0.14), transparent 42%),
+    radial-gradient(circle at 50% 100%, rgba(26, 26, 26, 0.45), transparent 60%), var(--background);
+}
+.app-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 560px) {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+  #app {
+    height: min(900px, calc(100vh - 64px));
+    min-height: 0;
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 50px 110px -30px rgba(0, 0, 0, 0.9),
+      0 0 70px rgba(91, 147, 255, 0.05);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 1.6s ease-in-out infinite;
+}
