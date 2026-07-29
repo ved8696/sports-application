@@ -13,13 +13,15 @@ const TABS = [
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-// Routes that render full-bleed without the tab bar (auth flow, not yet a
-// destination this sprint touches).
+// Routes that render full-bleed without the tab bar (auth flow, plus the
+// match-creation wizard -- its own sticky step footer shouldn't stack on
+// top of the tab bar).
 const HIDDEN_ON = ["/login", "/"];
+const HIDDEN_PREFIXES = ["/matches/new"];
 
 export function BottomNav() {
   const pathname = usePathname();
-  if (HIDDEN_ON.includes(pathname)) return null;
+  if (HIDDEN_ON.includes(pathname) || HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return null;
 
   return (
     <nav

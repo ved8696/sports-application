@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Bell, Loader2, AlertTriangle, PlusSquare, UserPlus, Shield, FileBarChart, CalendarClock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useCricketDashboard } from "@/lib/cricket/useCricketDashboard";
+import { useFixtureStore } from "@/lib/store/fixture-store";
 import type { ActivityEntry } from "@/app/api/data-activity/route";
+
+function formatFixtureDate(iso: string): string {
+  return new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+}
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -34,6 +39,7 @@ const QUICK_ACTIONS = [
 
 export default function DashboardPage() {
   const { status, error, isEmpty, matchCount, kpis, matchSummaries } = useCricketDashboard();
+  const { fixtures, load: loadFixtures } = useFixtureStore();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
 
@@ -47,10 +53,18 @@ export default function DashboardPage() {
       .then((r) => r.json())
       .then((d) => setActivity(d.entries ?? []))
       .catch(() => setActivity([]));
-  }, []);
+    loadFixtures();
+  }, [loadFixtures]);
 
   const displayName = userEmail ? userEmail.split("@")[0] : null;
   const recentMatches = matchSummaries.slice(0, 4);
+  const upcomingFixtures = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    return fixtures
+      .filter((f) => f.date >= today)
+      .sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`))
+      .slice(0, 4);
+  }, [fixtures]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -162,13 +176,36 @@ export default function DashboardPage() {
             {/* ---------- Upcoming Matches ---------- */}
             <section>
               <SectionLabel>Upcoming Matches</SectionLabel>
-              <Card className="flex flex-col items-center gap-2 py-8 text-center">
-                <CalendarClock size={20} className="text-muted-2" />
-                <p className="text-[13px] font-semibold">Nothing scheduled yet</p>
-                <p className="max-w-[240px] text-[11.5px] text-muted-2">
-                  Fixtures you create will show up here once match creation ships.
-                </p>
-              </Card>
+              {upcomingFixtures.length === 0 ? (
+                <Card className="flex flex-col items-center gap-2 py-8 text-center">
+                  <CalendarClock size={20} className="text-muted-2" />
+                  <p className="text-[13px] font-semibold">Nothing scheduled yet</p>
+                  <p className="max-w-[240px] text-[11.5px] text-muted-2">
+                    Tap &quot;Start New Match&quot; above to create your first fixture.
+                  </p>
+                </Card>
+              ) : (
+                <Card className="divide-y divide-white/[0.06] px-4">
+                  {upcomingFixtures.map((f) => (
+                    <Link
+                      key={f.id}
+                      href={`/matches/${f.id}`}
+                      className="flex items-center justify-between gap-3 py-3.5"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-[13px] font-bold">{f.name}</p>
+                        <p className="truncate text-[11px] text-muted-2">
+                          {f.venue.name} · {f.format}
+                        </p>
+                      </div>
+                      <div className="flex-none text-right">
+                        <p className="tabular-nums text-xs">{formatFixtureDate(f.date)}</p>
+                        <p className="mt-0.5 text-[10.5px] text-wood">{f.status}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </Card>
+              )}
             </section>
 
             {/* ---------- Recent Activity ---------- */}
