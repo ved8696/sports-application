@@ -17,9 +17,10 @@ const TABS = [
 // match-creation wizard, pre-match setup wizard, and live scoring screen --
 // each has its own sticky footer that shouldn't stack on top of the tab bar).
 const HIDDEN_ON = ["/login", "/"];
-const HIDDEN_PREFIXES = ["/matches/new"];
+const HIDDEN_PREFIXES = ["/matches/new", "/tournaments/new"];
 const SETUP_WIZARD_RE = /^\/matches\/[^/]+\/setup(\/|$)/;
 const LIVE_SCORING_RE = /^\/matches\/[^/]+\/live(\/|$)/;
+const TOURNAMENT_TRANSITION_RE = /^\/tournaments\/[^/]+\/(created|complete)(\/|$)/;
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -27,7 +28,8 @@ export function BottomNav() {
     HIDDEN_ON.includes(pathname) ||
     HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
     SETUP_WIZARD_RE.test(pathname) ||
-    LIVE_SCORING_RE.test(pathname)
+    LIVE_SCORING_RE.test(pathname) ||
+    TOURNAMENT_TRANSITION_RE.test(pathname)
   ) {
     return null;
   }

@@ -22,11 +22,17 @@ export default function MatchReadyPage() {
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
 
   useEffect(() => {
-    if (!fixtureId || !hasHydrated) return;
+    // fixtureStatus "ready" gates this alongside hasHydrated: a tournament
+    // fixture already has real teams/squads server-side, applied to the
+    // local draft by useSetupFixture's own hydrateFromFixture effect only
+    // once the fixture fetch resolves -- persist-hydration alone doesn't
+    // cover that second, fixture-driven hydration, so guardRedirect would
+    // otherwise see an empty draft and bounce back to team-a.
+    if (!fixtureId || !hasHydrated || fixtureStatus !== "ready") return;
     const redirect = guardRedirect(fixtureId, draft, "ready");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId, hasHydrated]);
+  }, [fixtureId, hasHydrated, fixtureStatus]);
 
   if (fixtureStatus !== "ready" || !fixture) {
     return (

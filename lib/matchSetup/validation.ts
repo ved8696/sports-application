@@ -2,12 +2,12 @@
 // same convention as lib/matchCreation/validation.ts and app/login/page.tsx.
 
 import type { SetupDraft, SetupStep, TeamDraft, XIDraft } from "./types";
-import { SETUP_STEPS, setupStepPath } from "./types";
+import { MIN_SQUAD_SIZE, SETUP_STEPS, setupStepPath } from "./types";
 import type { FixturePlayingXI, FixtureTeam, FixtureToss } from "@/lib/cricket/fixture-types";
 
 export type StepErrors = Partial<Record<string, string>>;
 
-export const MIN_SQUAD_SIZE = 11;
+export { MIN_SQUAD_SIZE };
 export const PLAYING_XI_SIZE = 11;
 
 export function validateTeamAStep(draft: SetupDraft): StepErrors {

@@ -21,7 +21,7 @@ const SELECT_CLASS =
 
 export default function CaptainsPage() {
   const router = useRouter();
-  const { fixtureId } = useSetupFixture();
+  const { fixtureId, fixtureStatus } = useSetupFixture();
   const { draft, setXIA, setXIB } = useMatchSetupStore();
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const { updateFixture } = useFixtureStore();
@@ -31,11 +31,11 @@ export default function CaptainsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!fixtureId || !hasHydrated) return;
+    if (!fixtureId || !hasHydrated || fixtureStatus !== "ready") return;
     const redirect = guardRedirect(fixtureId, draft, "captains");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId, hasHydrated]);
+  }, [fixtureId, hasHydrated, fixtureStatus]);
 
   const team = active === "A" ? draft.teamA : draft.teamB;
   const xi = active === "A" ? draft.xiA : draft.xiB;

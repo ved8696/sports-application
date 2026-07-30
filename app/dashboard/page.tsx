@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Bell, Loader2, AlertTriangle, PlusSquare, UserPlus, Shield, FileBarChart, CalendarClock, BarChart3 } from "lucide-react";
+import { Bell, Loader2, AlertTriangle, PlusSquare, UserPlus, Shield, FileBarChart, CalendarClock, BarChart3, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useCricketDashboard } from "@/lib/cricket/useCricketDashboard";
 import { useFixtureStore } from "@/lib/store/fixture-store";
@@ -34,6 +34,7 @@ const QUICK_ACTIONS = [
   { label: "Start New Match", href: "/matches/new", icon: PlusSquare, tone: "wood" as const },
   { label: "Score a Match", href: "/score", icon: CalendarClock, tone: "blue" as const },
   { label: "View All Matches", href: "/matches", icon: Shield, tone: "wood" as const },
+  { label: "Tournaments", href: "/tournaments", icon: Trophy, tone: "wood" as const },
   { label: "Analytics", href: "/analytics", icon: BarChart3, tone: "blue" as const },
   { label: "Add Player", href: "/players", icon: UserPlus, tone: "blue" as const },
 ];

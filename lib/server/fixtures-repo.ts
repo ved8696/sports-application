@@ -45,3 +45,17 @@ export function writeFixture(fixture: Fixture): void {
   fs.mkdirSync(FIXTURES_DIR, { recursive: true });
   fs.writeFileSync(path.join(FIXTURES_DIR, `${fixture.id}.json`), JSON.stringify(fixture, null, 2));
 }
+
+export function deleteFixture(id: string): boolean {
+  if (!FIXTURE_ID_RE.test(id)) return false;
+  try {
+    fs.unlinkSync(path.join(FIXTURES_DIR, `${id}.json`));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function listFixturesByTournament(tournamentId: string): Fixture[] {
+  return listFixtures().filter((f) => f.tournamentId === tournamentId);
+}

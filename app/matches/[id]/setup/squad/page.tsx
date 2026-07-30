@@ -22,7 +22,7 @@ type TeamKey = "A" | "B";
 
 export default function SquadManagementPage() {
   const router = useRouter();
-  const { fixtureId, matches } = useSetupFixture();
+  const { fixtureId, matches, fixtureStatus } = useSetupFixture();
   const { draft, setTeamA, setTeamB } = useMatchSetupStore();
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const [active, setActive] = useState<TeamKey>("A");
@@ -33,11 +33,11 @@ export default function SquadManagementPage() {
   const [touched, setTouched] = useState(false);
 
   useEffect(() => {
-    if (!fixtureId || !hasHydrated) return;
+    if (!fixtureId || !hasHydrated || fixtureStatus !== "ready") return;
     const redirect = guardRedirect(fixtureId, draft, "squad");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId, hasHydrated]);
+  }, [fixtureId, hasHydrated, fixtureStatus]);
 
   const team = active === "A" ? draft.teamA : draft.teamB;
   const setTeam = active === "A" ? setTeamA : setTeamB;

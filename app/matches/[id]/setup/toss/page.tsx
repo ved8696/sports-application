@@ -17,7 +17,7 @@ import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/t
 
 export default function TossPage() {
   const router = useRouter();
-  const { fixtureId } = useSetupFixture();
+  const { fixtureId, fixtureStatus } = useSetupFixture();
   const { draft, setToss } = useMatchSetupStore();
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const { updateFixture } = useFixtureStore();
@@ -28,11 +28,11 @@ export default function TossPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!fixtureId || !hasHydrated) return;
+    if (!fixtureId || !hasHydrated || fixtureStatus !== "ready") return;
     const redirect = guardRedirect(fixtureId, draft, "toss");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId, hasHydrated]);
+  }, [fixtureId, hasHydrated, fixtureStatus]);
 
   const errors = validateTossStep(draft);
 

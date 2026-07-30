@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { Fixture, FixturePatch, FixturePlayingXI, FixtureTeam, FixtureToss } from "@/lib/cricket/fixture-types";
-import { readFixture, writeFixture } from "@/lib/server/fixtures-repo";
+import { deleteFixture, readFixture, writeFixture } from "@/lib/server/fixtures-repo";
 
 export const dynamic = "force-dynamic";
 
@@ -80,4 +80,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   writeFixture(next);
   return NextResponse.json({ fixture: next });
+}
+
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const existing = readFixture(id);
+  if (!existing) return NextResponse.json({ error: "Match not found." }, { status: 404 });
+  if (existing.status !== "Scheduled") {
+    return NextResponse.json({ error: "Only scheduled matches can be deleted." }, { status: 400 });
+  }
+  deleteFixture(id);
+  return NextResponse.json({ ok: true });
 }

@@ -19,7 +19,7 @@ import { matchesSearch } from "@/lib/cricket/helpers";
 
 export default function TeamBSelectPage() {
   const router = useRouter();
-  const { fixtureId, matches, matchStatus } = useSetupFixture();
+  const { fixtureId, matches, matchStatus, fixtureStatus } = useSetupFixture();
   const { draft, setTeamB } = useMatchSetupStore();
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const [search, setSearch] = useState("");
@@ -28,11 +28,11 @@ export default function TeamBSelectPage() {
   const [newTeamName, setNewTeamName] = useState("");
 
   useEffect(() => {
-    if (!fixtureId || !hasHydrated) return;
+    if (!fixtureId || !hasHydrated || fixtureStatus !== "ready") return;
     const redirect = guardRedirect(fixtureId, draft, "team-b");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId, hasHydrated]);
+  }, [fixtureId, hasHydrated, fixtureStatus]);
 
   const excludeName = draft.teamA.name;
   const groups = useMemo(

@@ -15,8 +15,10 @@ interface FixtureStoreState {
   error: string | null;
   fixtures: Fixture[];
   load: () => Promise<void>;
+  reload: () => Promise<void>;
   createFixture: (draft: FixtureDraft) => Promise<Fixture>;
   updateFixture: (id: string, patch: FixturePatch) => Promise<Fixture>;
+  deleteFixture: (id: string) => Promise<void>;
 }
 
 export const useFixtureStore = create<FixtureStoreState>((set, get) => ({
@@ -65,5 +67,29 @@ export const useFixtureStore = create<FixtureStoreState>((set, get) => ({
     const { fixture }: { fixture: Fixture } = await res.json();
     set((s) => ({ fixtures: s.fixtures.map((f) => (f.id === fixture.id ? fixture : f)) }));
     return fixture;
+  },
+
+  deleteFixture: async (id) => {
+    const res = await fetch(`/api/fixtures/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}) as { error?: string });
+      throw new Error(body.error ?? `Failed to delete match (HTTP ${res.status})`);
+    }
+    set((s) => ({ fixtures: s.fixtures.filter((f) => f.id !== id) }));
+  },
+
+  // Bypasses the "ready" short-circuit in load() -- used when returning to a
+  // tournament screen mid-session so a just-completed match's flipped status
+  // (Scheduled/Live -> Completed) shows up without a full page reload.
+  reload: async () => {
+    set({ error: null });
+    try {
+      const res = await fetch("/api/fixtures");
+      if (!res.ok) throw new Error(`Failed to load matches (HTTP ${res.status})`);
+      const data: { fixtures: Fixture[] } = await res.json();
+      set({ fixtures: data.fixtures ?? [], status: "ready" });
+    } catch (err) {
+      set({ status: "error", error: err instanceof Error ? err.message : "Unknown error loading matches" });
+    }
   },
 }));
