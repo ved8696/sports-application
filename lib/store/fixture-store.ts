@@ -6,7 +6,7 @@
 // reflect it immediately without a re-fetch.
 
 import { create } from "zustand";
-import type { Fixture, FixtureDraft } from "@/lib/cricket/fixture-types";
+import type { Fixture, FixtureDraft, FixturePatch } from "@/lib/cricket/fixture-types";
 
 export type FixtureLoadStatus = "idle" | "loading" | "ready" | "error";
 
@@ -16,6 +16,7 @@ interface FixtureStoreState {
   fixtures: Fixture[];
   load: () => Promise<void>;
   createFixture: (draft: FixtureDraft) => Promise<Fixture>;
+  updateFixture: (id: string, patch: FixturePatch) => Promise<Fixture>;
 }
 
 export const useFixtureStore = create<FixtureStoreState>((set, get) => ({
@@ -48,6 +49,21 @@ export const useFixtureStore = create<FixtureStoreState>((set, get) => ({
     }
     const { fixture }: { fixture: Fixture } = await res.json();
     set((s) => ({ fixtures: [fixture, ...s.fixtures], status: "ready" }));
+    return fixture;
+  },
+
+  updateFixture: async (id, patch) => {
+    const res = await fetch(`/api/fixtures/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}) as { error?: string });
+      throw new Error(body.error ?? `Failed to update match (HTTP ${res.status})`);
+    }
+    const { fixture }: { fixture: Fixture } = await res.json();
+    set((s) => ({ fixtures: s.fixtures.map((f) => (f.id === fixture.id ? fixture : f)) }));
     return fixture;
   },
 }));

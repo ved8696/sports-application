@@ -10,6 +10,7 @@ import { ReviewSection, SummaryRow } from "@/components/match-creation/review-se
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { guardRedirect, toFixtureDraft } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { GENDER_OPTIONS, venueLabel } from "@/lib/matchCreation/defaults";
 
 const TOURNAMENT_TYPE_LABEL: Record<string, string> = {
@@ -66,7 +67,9 @@ export default function ReviewMatchStep() {
 
   return (
     <WizardShell
-      step="review"
+      title={STEP_TITLE.review}
+      stepIndex={WIZARD_STEPS.indexOf("review")}
+      stepCount={WIZARD_STEPS.length}
       backHref="/matches/new/schedule"
       footer={
         <div className="flex flex-col gap-2.5">

@@ -9,6 +9,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { guardRedirect, validateScheduleStep } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { DAY_NIGHT_OPTIONS, commonTimeZones } from "@/lib/matchCreation/defaults";
 
 const SELECT_CLASS =
@@ -46,7 +47,13 @@ export default function DateTimeStep() {
   }
 
   return (
-    <WizardShell step="schedule" backHref="/matches/new/venue" footer={<Button onClick={handleNext}>Continue</Button>}>
+    <WizardShell
+      title={STEP_TITLE.schedule}
+      stepIndex={WIZARD_STEPS.indexOf("schedule")}
+      stepCount={WIZARD_STEPS.length}
+      backHref="/matches/new/venue"
+      footer={<Button onClick={handleNext}>Continue</Button>}
+    >
       <div className="flex flex-col gap-5 pt-1">
         <div>
           <FieldLabel htmlFor="match-date">Match Date</FieldLabel>

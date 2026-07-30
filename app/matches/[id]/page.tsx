@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, AlertTriangle, MapPin, CalendarClock, Trophy, Layer
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { venueLabel } from "@/lib/matchCreation/defaults";
+import { resumeSetupStep, setupStepPath } from "@/lib/matchSetup/types";
 import type { Fixture } from "@/lib/cricket/fixture-types";
 
 function formatDate(iso: string): string {
@@ -116,12 +117,15 @@ export default function MatchDetailsScreen() {
               <InfoRow icon={Layers} label="Match Type" value={fixture.matchType} />
             </Card>
 
-            <div>
-              <Button disabled className="opacity-60">
-                Continue to Toss
-              </Button>
-              <p className="mt-2 text-center text-[11px] text-muted-2">Available in the next sprint.</p>
-            </div>
+            <Button asChild>
+              {fixture.status === "Live" ? (
+                <Link href={`/matches/${fixture.id}/live`}>Continue Scoring</Link>
+              ) : (
+                <Link href={setupStepPath(fixture.id, resumeSetupStep(fixture))}>
+                  {fixture.toss ? "View Match Ready" : "Continue to Toss"}
+                </Link>
+              )}
+            </Button>
           </div>
         )}
       </div>

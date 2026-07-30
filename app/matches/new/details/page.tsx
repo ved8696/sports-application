@@ -10,6 +10,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { guardRedirect, validateDetailsStep } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { MATCH_FORMATS, BALL_TYPES, GENDER_OPTIONS, AGE_GROUPS, MATCH_TYPES } from "@/lib/matchCreation/defaults";
 
 const SELECT_CLASS =
@@ -39,7 +40,13 @@ export default function MatchDetailsStep() {
   }
 
   return (
-    <WizardShell step="details" backHref="/matches/new" footer={<Button onClick={handleNext}>Continue</Button>}>
+    <WizardShell
+      title={STEP_TITLE.details}
+      stepIndex={WIZARD_STEPS.indexOf("details")}
+      stepCount={WIZARD_STEPS.length}
+      backHref="/matches/new"
+      footer={<Button onClick={handleNext}>Continue</Button>}
+    >
       <div className="flex flex-col gap-5 pt-1">
         <div>
           <FieldLabel htmlFor="match-name">Match Name</FieldLabel>

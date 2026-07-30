@@ -14,14 +14,23 @@ const TABS = [
 ] as const;
 
 // Routes that render full-bleed without the tab bar (auth flow, plus the
-// match-creation wizard -- its own sticky step footer shouldn't stack on
-// top of the tab bar).
+// match-creation wizard, pre-match setup wizard, and live scoring screen --
+// each has its own sticky footer that shouldn't stack on top of the tab bar).
 const HIDDEN_ON = ["/login", "/"];
 const HIDDEN_PREFIXES = ["/matches/new"];
+const SETUP_WIZARD_RE = /^\/matches\/[^/]+\/setup(\/|$)/;
+const LIVE_SCORING_RE = /^\/matches\/[^/]+\/live(\/|$)/;
 
 export function BottomNav() {
   const pathname = usePathname();
-  if (HIDDEN_ON.includes(pathname) || HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return null;
+  if (
+    HIDDEN_ON.includes(pathname) ||
+    HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
+    SETUP_WIZARD_RE.test(pathname) ||
+    LIVE_SCORING_RE.test(pathname)
+  ) {
+    return null;
+  }
 
   return (
     <nav

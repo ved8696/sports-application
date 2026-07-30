@@ -12,6 +12,7 @@ import { useCricketStore } from "@/lib/store/cricket-store";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { uniqueSorted, matchesSearch } from "@/lib/cricket/helpers";
 import { validateTournamentStep } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { cn } from "@/lib/utils";
 import type { FixtureCreationType } from "@/lib/cricket/fixture-types";
 
@@ -80,7 +81,13 @@ export default function TournamentSelectionPage() {
   }
 
   return (
-    <WizardShell step="tournament" backHref="/dashboard" footer={<Button onClick={handleNext}>Continue</Button>}>
+    <WizardShell
+      title={STEP_TITLE.tournament}
+      stepIndex={WIZARD_STEPS.indexOf("tournament")}
+      stepCount={WIZARD_STEPS.length}
+      backHref="/dashboard"
+      footer={<Button onClick={handleNext}>Continue</Button>}
+    >
       <div className="flex flex-col gap-5 pt-1">
         <section>
           <p className="mb-2.5 text-[11px] font-bold uppercase tracking-wide text-wood">Start a new match</p>

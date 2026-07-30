@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { guardRedirect, validateRulesStep } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { RETIREMENT_OPTIONS } from "@/lib/matchCreation/defaults";
 
 const SELECT_CLASS =
@@ -39,7 +40,13 @@ export default function CompetitionRulesStep() {
   }
 
   return (
-    <WizardShell step="rules" backHref="/matches/new/details" footer={<Button onClick={handleNext}>Continue</Button>}>
+    <WizardShell
+      title={STEP_TITLE.rules}
+      stepIndex={WIZARD_STEPS.indexOf("rules")}
+      stepCount={WIZARD_STEPS.length}
+      backHref="/matches/new/details"
+      footer={<Button onClick={handleNext}>Continue</Button>}
+    >
       <div className="flex flex-col gap-5 pt-1">
         {!isTest && (
           <div>

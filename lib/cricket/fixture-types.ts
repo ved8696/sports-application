@@ -10,7 +10,7 @@ export type FixtureCreationType = "friendly" | "league" | "tournament";
 export type BallType = "Red" | "White" | "Pink";
 export type DayNight = "Day" | "Night" | "Day/Night";
 export type RetirementRule = "none" | "retired-out" | "retired-not-out";
-export type FixtureStatus = "Scheduled";
+export type FixtureStatus = "Scheduled" | "Live";
 
 export interface FixtureTournament {
   type: FixtureCreationType;
@@ -34,6 +34,25 @@ export interface FixtureRules {
   retirementOverThreshold?: number;
 }
 
+/** A team as configured for this specific fixture -- squad is a plain player-name list, not a persisted team roster. */
+export interface FixtureTeam {
+  name: string;
+  squad: string[];
+}
+
+export interface FixturePlayingXI {
+  team: string; // matches FixtureTeam.name
+  players: string[]; // exactly 11, all drawn from that team's squad
+  captain: string;
+  viceCaptain?: string;
+  wicketKeeper: string;
+}
+
+export interface FixtureToss {
+  winner: string; // matches one of the two team names
+  decision: "bat" | "bowl";
+}
+
 export interface Fixture {
   id: string;
   name: string;
@@ -52,7 +71,14 @@ export interface Fixture {
   timeZone: string;
   dayNight: DayNight;
   rules: FixtureRules;
+  /** Populated progressively by the pre-match setup flow (/matches/[id]/setup/*), absent until each stage is completed. */
+  teams?: [FixtureTeam, FixtureTeam];
+  playingXI?: [FixturePlayingXI, FixturePlayingXI];
+  toss?: FixtureToss;
 }
 
 /** Shape submitted to POST /api/fixtures -- server assigns id/createdAt/status. */
 export type FixtureDraft = Omit<Fixture, "id" | "createdAt" | "status">;
+
+/** Shape accepted by PATCH /api/fixtures/[id] -- any subset of the post-creation setup fields. */
+export type FixturePatch = Partial<Pick<Fixture, "teams" | "playingXI" | "toss" | "status">>;

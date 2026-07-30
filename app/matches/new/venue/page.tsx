@@ -13,6 +13,7 @@ import { useCricketStore } from "@/lib/store/cricket-store";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
 import { matchesSearch } from "@/lib/cricket/helpers";
 import { guardRedirect, validateVenueStep } from "@/lib/matchCreation/validation";
+import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 
 interface VenueOption {
   name: string;
@@ -81,7 +82,13 @@ export default function VenueStep() {
   }
 
   return (
-    <WizardShell step="venue" backHref="/matches/new/rules" footer={<Button onClick={handleNext}>Continue</Button>}>
+    <WizardShell
+      title={STEP_TITLE.venue}
+      stepIndex={WIZARD_STEPS.indexOf("venue")}
+      stepCount={WIZARD_STEPS.length}
+      backHref="/matches/new/rules"
+      footer={<Button onClick={handleNext}>Continue</Button>}
+    >
       <div className="flex flex-col gap-4 pt-1">
         {draft.venue.name && (
           <div className="rounded-xl border border-blue/50 bg-blue/[0.06] px-4 py-3.5">
