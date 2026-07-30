@@ -29,6 +29,38 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --radius-card: 16px;
+
+  --scheme: dark;
+}
+
+/* Light theme -- opt-in via [data-theme="light"] on <html>, set by the
+   blocking inline script in app/layout.tsx (first paint, reads the
+   persisted Settings store) and kept in sync afterwards by
+   components/settings/theme-init.tsx. Dark stays the default above so every
+   existing screen is visually unchanged unless the user opts into Light or
+   their system is light and they've chosen "System" in Appearance. */
+:root[data-theme="light"] {
+  --background: #f5f3ee;
+  --surface: #ffffff;
+  --surface-2: #f2f0ea;
+  --surface-3: #e9e6dd;
+  --surface-hover: #eeece2;
+  --border: #e0dccf;
+  --border-soft: rgba(0, 0, 0, 0.06);
+  --foreground: #1c1a16;
+  --muted: #6f6a60;
+  --muted-2: #96907f;
+
+  --wood: #b3814f;
+  --walnut: #7a5738;
+
+  --blue: #3d6fe0;
+  --blue-dim: #2c56b8;
+
+  --red: #d6373d;
+  --red-dim: #b93338;
+
+  --scheme: light;
 }
 
 @theme inline {
@@ -63,18 +95,18 @@ body {
   height: 100%;
 }
 html {
-  color-scheme: dark;
+  color-scheme: var(--scheme);
 }
 body {
   font-family: var(--font-sans), -apple-system, "Segoe UI", sans-serif;
   color: var(--foreground);
-  background: #000;
+  background: var(--background);
   min-height: 100vh;
   min-height: 100dvh;
 }
 ::selection {
   background: rgba(200, 155, 109, 0.3);
-  color: #fff;
+  color: var(--foreground);
 }
 ::-webkit-scrollbar {
   width: 0;
@@ -113,6 +145,15 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+/* Opt-in wider frame for the Settings module's tablet master-detail layout
+   (app/settings/layout.tsx toggles this attribute while mounted). Every
+   other route keeps the phone-width frame above -- this app has no other
+   tablet-specific layout today. */
+@media (min-width: 768px) {
+  #app[data-wide="true"] {
+    max-width: 900px;
+  }
 }
 @media (min-width: 560px) {
   body {
