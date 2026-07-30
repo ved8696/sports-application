@@ -3,6 +3,8 @@ import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/components/mobile/bottom-nav";
 import { ThemeInit } from "@/components/settings/theme-init";
+import { SearchAiPanel } from "@/components/search/search-ai-panel";
+import { VisitTracker } from "@/components/search/visit-tracker";
 
 // Runs before hydration so a saved Appearance theme (or "System" resolving
 // to a light OS preference) never flashes as dark on first paint. Reads the
@@ -46,9 +48,11 @@ export default function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <ThemeInit />
+        <VisitTracker />
         <div id="app">
           <main className="app-main">{children}</main>
           <BottomNav />
+          <SearchAiPanel />
         </div>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useCricketDashboard } from "@/lib/cricket/useCricketDashboard";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 
@@ -21,9 +22,12 @@ export default function MatchesPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex-none px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <h1 className="text-lg font-extrabold">Matches</h1>
-        <p className="text-xs text-muted">Scheduled fixtures and completed matches from /data</p>
+      <header className="flex flex-none items-start justify-between px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
+        <div>
+          <h1 className="text-lg font-extrabold">Matches</h1>
+          <p className="text-xs text-muted">Scheduled fixtures and completed matches from /data</p>
+        </div>
+        <SearchAiButton />
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">

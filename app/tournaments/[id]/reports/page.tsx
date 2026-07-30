@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ChevronDown, Download, Trophy, TrendingUp, Users, Target, Medal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useTournamentStore } from "@/lib/store/tournament-store";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { useCricketStore } from "@/lib/store/cricket-store";
@@ -74,7 +75,8 @@ export default function TournamentReportsPage() {
         <Link href={`/tournaments/${id}`} className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
           <ArrowLeft size={16} />
         </Link>
-        <h1 className="text-lg font-extrabold">Reports</h1>
+        <h1 className="flex-1 text-lg font-extrabold">Reports</h1>
+        <SearchAiButton />
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-4">

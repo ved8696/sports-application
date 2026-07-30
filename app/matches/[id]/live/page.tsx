@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, AlertTriangle, Settings2, PauseCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { useLiveScoringStore } from "@/lib/store/live-scoring-store";
 import { OpenerSetup } from "@/components/live-scoring/opener-setup";
@@ -138,6 +139,7 @@ export default function LiveScoringPage() {
             </p>
           )}
         </div>
+        <SearchAiButton />
         {state && state.status !== "innings-break" && (
           <button
             type="button"

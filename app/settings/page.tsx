@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 import { CategoryContent } from "@/components/settings/category-content";
 import { ProfileEditGrid } from "@/components/settings/sections/profile-edit-grid";
 import { useSettingsStore } from "@/lib/store/settings-store";
@@ -50,8 +51,9 @@ export default function SettingsHomePage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
+      <header className="flex flex-none items-center justify-between px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
         <h1 className="text-lg font-extrabold">Settings</h1>
+        <SearchAiButton />
       </header>
 
       {isTablet ? (

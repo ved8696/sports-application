@@ -6,6 +6,7 @@ import { Plus, Search, Loader2, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useTournamentStore } from "@/lib/store/tournament-store";
 import { TOURNAMENT_FORMAT_LABEL } from "@/lib/tournament/types";
 import { matchesSearch } from "@/lib/cricket/helpers";
@@ -42,13 +43,16 @@ export default function TournamentDashboardPage() {
     <div className="flex min-h-0 flex-1 flex-col">
       <header className="flex flex-none items-center justify-between px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
         <h1 className="text-lg font-extrabold">Tournaments</h1>
-        <Link
-          href="/tournaments/new"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background"
-          aria-label="Create tournament"
-        >
-          <Plus size={18} />
-        </Link>
+        <div className="flex flex-none items-center gap-2">
+          <SearchAiButton />
+          <Link
+            href="/tournaments/new"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background"
+            aria-label="Create tournament"
+          >
+            <Plus size={18} />
+          </Link>
+        </div>
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-24">

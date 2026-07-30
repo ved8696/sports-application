@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { SearchAiButton } from "@/components/search/search-ai-button";
 
 export function ComingSoon({
   title,
@@ -27,7 +28,8 @@ export function ComingSoon({
             <ArrowLeft size={16} />
           </Link>
         )}
-        <h1 className="text-lg font-extrabold">{title}</h1>
+        <h1 className="flex-1 text-lg font-extrabold">{title}</h1>
+        <SearchAiButton />
       </header>
       <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center">
         <Card className="flex w-full flex-col items-center gap-3 py-12">
