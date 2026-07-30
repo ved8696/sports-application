@@ -40,7 +40,7 @@ function isValidToss(toss: unknown): toss is FixtureToss {
 }
 
 function isValidStatus(status: unknown): status is Fixture["status"] {
-  return status === "Scheduled" || status === "Live";
+  return status === "Scheduled" || status === "Live" || status === "Completed";
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {

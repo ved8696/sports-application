@@ -8,6 +8,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { OptionCard } from "@/components/match-creation/option-card";
 import { FieldError } from "@/components/match-creation/form-field";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect, validatePlayingXIStep, PLAYING_XI_SIZE } from "@/lib/matchSetup/validation";
 import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/types";
@@ -18,15 +19,16 @@ export default function PlayingXIPage() {
   const router = useRouter();
   const { fixtureId } = useSetupFixture();
   const { draft, setXIA, setXIB } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const [active, setActive] = useState<TeamKey>("A");
   const [touched, setTouched] = useState(false);
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "playing-xi");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   const team = active === "A" ? draft.teamA : draft.teamB;
   const xi = active === "A" ? draft.xiA : draft.xiB;

@@ -10,7 +10,7 @@ export type FixtureCreationType = "friendly" | "league" | "tournament";
 export type BallType = "Red" | "White" | "Pink";
 export type DayNight = "Day" | "Night" | "Day/Night";
 export type RetirementRule = "none" | "retired-out" | "retired-not-out";
-export type FixtureStatus = "Scheduled" | "Live";
+export type FixtureStatus = "Scheduled" | "Live" | "Completed";
 
 export interface FixtureTournament {
   type: FixtureCreationType;

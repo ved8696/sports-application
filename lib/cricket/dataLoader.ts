@@ -109,6 +109,17 @@ function parseVideoEntries(entries: RawVideoEntry[]): Map<string, VideoMetadata[
 
 let cache: CricketDataset | null = null;
 
+/**
+ * Drops the memoized dataset so the next loadCricketData() call re-reads
+ * /data from disk. Called after a live match is archived (lib/server/match-
+ * archive.ts) so a just-completed match's stats appear immediately instead
+ * of waiting for a server restart -- the memoization itself is untouched for
+ * every other caller.
+ */
+export function invalidateCricketDataCache(): void {
+  cache = null;
+}
+
 /** Reads and parses every JSON file in /data. Result is memoized for the life of the server process. */
 export function loadCricketData(): CricketDataset {
   if (cache) return cache;

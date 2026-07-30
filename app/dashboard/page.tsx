@@ -62,13 +62,13 @@ export default function DashboardPage() {
   const upcomingFixtures = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
     return fixtures
-      .filter((f) => f.date >= today)
+      .filter((f) => f.status !== "Completed" && f.date >= today)
       .sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`))
       .slice(0, 4);
   }, [fixtures]);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <header
         className="flex flex-none items-center justify-between px-5 pb-4"
         style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}
@@ -82,7 +82,7 @@ export default function DashboardPage() {
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-6">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
         {(status === "idle" || status === "loading") && (
           <Card className="flex items-center justify-center gap-2.5 py-14 text-sm text-muted">
             <Loader2 size={16} className="animate-spin text-blue" />

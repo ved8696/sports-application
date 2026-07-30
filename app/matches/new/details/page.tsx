@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { guardRedirect, validateDetailsStep } from "@/lib/matchCreation/validation";
 import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { MATCH_FORMATS, BALL_TYPES, GENDER_OPTIONS, AGE_GROUPS, MATCH_TYPES } from "@/lib/matchCreation/defaults";
@@ -19,15 +20,17 @@ const SELECT_CLASS =
 export default function MatchDetailsStep() {
   const router = useRouter();
   const { draft, updateDraft, setFormat } = useMatchCreationStore();
+  const hasHydrated = useHasHydrated(useMatchCreationStore.persist);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const errors = validateDetailsStep(draft);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     const redirect = guardRedirect(draft, "details");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasHydrated]);
 
   function markTouched(field: string) {
     setTouched((t) => ({ ...t, [field]: true }));

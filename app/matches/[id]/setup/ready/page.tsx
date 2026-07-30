@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ReviewSection, SummaryRow } from "@/components/match-creation/review-section";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect } from "@/lib/matchSetup/validation";
 import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/types";
@@ -18,13 +19,14 @@ export default function MatchReadyPage() {
   const router = useRouter();
   const { fixtureId, fixture, fixtureStatus } = useSetupFixture();
   const { draft } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "ready");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   if (fixtureStatus !== "ready" || !fixture) {
     return (

@@ -15,16 +15,18 @@ export default function MatchesPage() {
     loadFixtures();
   }, [loadFixtures]);
 
-  const upcoming = [...fixtures].sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`));
+  const upcoming = fixtures
+    .filter((f) => f.status !== "Completed")
+    .sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`));
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <header className="flex-none px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
         <h1 className="text-lg font-extrabold">Matches</h1>
         <p className="text-xs text-muted">Scheduled fixtures and completed matches from /data</p>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-6">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
         <div className="flex flex-col gap-6">
           <section>
             <p className="mb-2.5 border-l-2 border-wood pl-2 text-[11px] font-bold uppercase tracking-wide text-wood">
@@ -72,26 +74,36 @@ export default function MatchesPage() {
               </Card>
             ) : (
               <div className="flex flex-col gap-2.5">
-                {matchSummaries.map((m) => (
-                  <Card key={m.id} className="p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="truncate text-[13.5px] font-bold">
-                          {m.teamA} vs {m.teamB}
-                        </p>
-                        <p className="truncate text-[11px] text-muted-2">
-                          {m.venue} · {m.date}
-                        </p>
+                {matchSummaries.map((m) => {
+                  const hasScorecard = m.id.startsWith("fixture-");
+                  const card = (
+                    <Card className="p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-[13.5px] font-bold">
+                            {m.teamA} vs {m.teamB}
+                          </p>
+                          <p className="truncate text-[11px] text-muted-2">
+                            {m.venue} · {m.date}
+                          </p>
+                        </div>
+                        <div className="flex-none text-right">
+                          <p className="tabular-nums text-xs">
+                            {m.scoreA ?? "—"} → {m.scoreB ?? "—"}
+                          </p>
+                          <p className="mt-0.5 text-[10.5px] text-wood">{m.result ?? m.status}</p>
+                        </div>
                       </div>
-                      <div className="flex-none text-right">
-                        <p className="tabular-nums text-xs">
-                          {m.scoreA ?? "—"} → {m.scoreB ?? "—"}
-                        </p>
-                        <p className="mt-0.5 text-[10.5px] text-wood">{m.result ?? m.status}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  );
+                  return hasScorecard ? (
+                    <Link key={m.id} href={`/matches/${m.id}/scorecard`}>
+                      {card}
+                    </Link>
+                  ) : (
+                    <div key={m.id}>{card}</div>
+                  );
+                })}
               </div>
             )}
           </section>

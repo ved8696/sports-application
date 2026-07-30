@@ -39,7 +39,7 @@ export function BottomSheet({
               </Dialog.Close>
             )}
           </div>
-          <div className="flex-1 overflow-y-auto px-5" style={{ paddingBottom: "calc(var(--safe-bottom) + 16px)" }}>
+          <div className="min-h-0 flex-1 overflow-y-auto px-5" style={{ paddingBottom: "calc(var(--safe-bottom) + 16px)" }}>
             {children}
           </div>
         </Dialog.Content>

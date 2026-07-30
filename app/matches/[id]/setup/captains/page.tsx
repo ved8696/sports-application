@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect, validateCaptainsStep, toFixtureTeams, toFixturePlayingXI } from "@/lib/matchSetup/validation";
@@ -22,6 +23,7 @@ export default function CaptainsPage() {
   const router = useRouter();
   const { fixtureId } = useSetupFixture();
   const { draft, setXIA, setXIB } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const { updateFixture } = useFixtureStore();
   const [active, setActive] = useState<TeamKey>("A");
   const [touched, setTouched] = useState(false);
@@ -29,11 +31,11 @@ export default function CaptainsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "captains");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   const team = active === "A" ? draft.teamA : draft.teamB;
   const xi = active === "A" ? draft.xiA : draft.xiB;

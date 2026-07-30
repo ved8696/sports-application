@@ -50,6 +50,7 @@ export function createInnings(
     bowlers: { [openers.bowlerName]: createBowler(openers.bowlerName) },
     fallOfWickets: [],
     partnerships: [newPartnership(openers.strikerName, openers.nonStrikerName, "0.0")],
+    endReason: null,
   };
 }
 
@@ -87,6 +88,11 @@ export function createLiveMatchState(fixture: Fixture, openers: OpeningSelection
     dayNight: fixture.dayNight,
     innings1: createInnings(1, battingFirst, bowlingFirst, openers),
     innings2: null,
+    result: null,
+    report: null,
+    potm: null,
+    startedAt: new Date().toISOString(),
+    completedAt: null,
     updatedAt: new Date().toISOString(),
   };
 }

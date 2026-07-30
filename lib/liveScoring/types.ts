@@ -118,6 +118,8 @@ export interface FallOfWicket {
 
 export type InningsStatus = "not-started" | "in-progress" | "completed";
 
+export type InningsEndReason = "all-out" | "overs-completed" | "declared" | "target-reached" | "conceded";
+
 export interface InningsState {
   inningsNumber: 1 | 2;
   battingTeam: string;
@@ -143,9 +145,77 @@ export interface InningsState {
   bowlers: Record<string, BowlerInningsStats>;
   fallOfWickets: FallOfWicket[];
   partnerships: Partnership[]; // last entry is the current (active) partnership
+  endReason: InningsEndReason | null;
 }
 
-export type MatchLiveStatus = "not-started" | "innings-break" | "in-progress" | "completed";
+export type MatchLiveStatus = "not-started" | "innings-break" | "in-progress" | "paused" | "completed";
+
+export type MatchResultType = "win" | "tie" | "no-result" | "draw";
+
+export interface MatchResultDetail {
+  type: MatchResultType;
+  winner?: string;
+  marginRuns?: number;
+  marginWickets?: number;
+  /** True when both innings finished level -- a super over would decide it in a fuller implementation; not played out here. */
+  superOverEligible?: boolean;
+  summaryText: string;
+}
+
+export interface ChaseState {
+  target: number;
+  runsRequired: number;
+  ballsRemaining: number | null; // null when the format has no overs limit
+  oversRemainingLabel: string | null;
+  requiredRunRate: number | null;
+  isWon: boolean;
+}
+
+export interface PlayerImpactBreakdown {
+  battingPoints: number;
+  bowlingPoints: number;
+  fieldingPoints: number;
+  total: number;
+}
+
+export interface PlayerImpactScore {
+  name: string;
+  team: string;
+  breakdown: PlayerImpactBreakdown;
+}
+
+export interface PotmWeights {
+  runPoint: number;
+  boundaryBonus: number;
+  sixBonus: number;
+  strikeRateBonus: number;
+  wicketPoint: number;
+  economyBonus: number;
+  catchPoint: number;
+  runOutPoint: number;
+}
+
+export interface PotmResult {
+  playerOfMatch: PlayerImpactScore;
+  bestBatter: PlayerImpactScore;
+  bestBowler: PlayerImpactScore;
+  bestFielder: PlayerImpactScore | null;
+  allScores: PlayerImpactScore[];
+}
+
+export interface MatchReportHighlight {
+  label: string;
+  inningsNumber: 1 | 2;
+  overLabel: string;
+}
+
+export interface MatchReport {
+  summary: string;
+  highestPartnership: { batters: [string, string]; runs: number; inningsNumber: 1 | 2 } | null;
+  turningPoint: string;
+  topPerformers: { name: string; description: string }[];
+  highlights: MatchReportHighlight[];
+}
 
 export interface LiveMatchState {
   fixtureId: string;
@@ -160,6 +230,12 @@ export interface LiveMatchState {
   dayNight: DayNight;
   innings1: InningsState;
   innings2: InningsState | null;
+  /** Populated once the match completes. */
+  result: MatchResultDetail | null;
+  report: MatchReport | null;
+  potm: PotmResult | null;
+  startedAt: string;
+  completedAt: string | null;
   updatedAt: string;
 }
 

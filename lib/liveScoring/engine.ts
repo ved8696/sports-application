@@ -13,13 +13,23 @@
 //   themselves trigger the usual odd/even strike rotation -- the wicket-slot
 //   clearing above supersedes it for that ball.
 
-import type { BallEvent, BallInput, InningsState } from "./types";
+import type {
+  BallEvent,
+  BallInput,
+  InningsEndReason,
+  InningsState,
+  LiveMatchState,
+  MatchReport,
+  MatchResultDetail,
+  PotmResult,
+} from "./types";
 import { computeExtras } from "./extras";
 import { bowlerCredited } from "./wickets";
 import { isOverComplete, legalBallsInOver, nextBallInOver, oversLabel } from "./overs";
 import { applyBallToBatter, createBatter, dismissBatter, retireBatter } from "./batters";
 import { applyBallToBowler, applyMaiden, createBowler } from "./bowlers";
 import { applyBallToPartnership, closePartnership, newPartnership } from "./partnerships";
+import { createInnings, type OpeningSelection } from "./initialize";
 
 let idSeq = 0;
 function nextBallId(): string {
@@ -269,4 +279,39 @@ export function setBowler(innings: InningsState, name: string): InningsState {
   const bowlers = { ...innings.bowlers };
   if (!bowlers[name]) bowlers[name] = createBowler(name);
   return { ...innings, bowlers, currentBowlerName: name };
+}
+
+/** Closes out an innings (all out, overs completed, target reached, or declared) -- the active partnership stops accruing. */
+export function endInnings(innings: InningsState, reason: InningsEndReason): InningsState {
+  const partnerships = [...innings.partnerships];
+  if (partnerships.length > 0) partnerships[partnerships.length - 1] = closePartnership(partnerships[partnerships.length - 1]);
+  return { ...innings, status: "completed", endReason: reason, partnerships };
+}
+
+/**
+ * Starts the second innings: the side that bowled first now bats, openers
+ * are chosen fresh (never reused from innings 1 automatically -- a real
+ * scorer confirms who's opening), and the match moves back to "in-progress".
+ */
+export function startSecondInnings(state: LiveMatchState, openers: OpeningSelection): LiveMatchState {
+  if (state.innings1.status !== "completed") {
+    throw new Error("Cannot start the second innings before the first one ends.");
+  }
+  const innings2 = createInnings(2, state.innings1.bowlingTeam, state.innings1.battingTeam, openers);
+  return { ...state, innings2, currentInnings: 2, status: "in-progress" };
+}
+
+export function pauseMatch(state: LiveMatchState): LiveMatchState {
+  if (state.status !== "in-progress") return state;
+  return { ...state, status: "paused" };
+}
+
+export function resumeMatch(state: LiveMatchState): LiveMatchState {
+  if (state.status !== "paused") return state;
+  return { ...state, status: "in-progress" };
+}
+
+/** Finalizes the match with its computed result/report/POTM -- the store persists this and archives it into /data separately. */
+export function completeMatch(state: LiveMatchState, result: MatchResultDetail, report: MatchReport, potm: PotmResult | null): LiveMatchState {
+  return { ...state, status: "completed", result, report, potm, completedAt: new Date().toISOString() };
 }

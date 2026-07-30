@@ -11,6 +11,7 @@ import { OptionCard } from "@/components/match-creation/option-card";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useCricketStore } from "@/lib/store/cricket-store";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { matchesSearch } from "@/lib/cricket/helpers";
 import { guardRedirect, validateVenueStep } from "@/lib/matchCreation/validation";
 import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
@@ -34,6 +35,7 @@ export default function VenueStep() {
   const router = useRouter();
   const { matches, status, load } = useCricketStore();
   const { draft, updateDraft } = useMatchCreationStore();
+  const hasHydrated = useHasHydrated(useMatchCreationStore.persist);
   const [search, setSearch] = useState("");
   const [touched, setTouched] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -46,10 +48,11 @@ export default function VenueStep() {
   }, [load]);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     const redirect = guardRedirect(draft, "venue");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasHydrated]);
 
   const venues = useMemo(() => venueOptions(matches), [matches]);
   const filtered = useMemo(

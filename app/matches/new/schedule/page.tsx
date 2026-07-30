@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { guardRedirect, validateScheduleStep } from "@/lib/matchCreation/validation";
 import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { DAY_NIGHT_OPTIONS, commonTimeZones } from "@/lib/matchCreation/defaults";
@@ -22,17 +23,19 @@ function todayIso(): string {
 export default function DateTimeStep() {
   const router = useRouter();
   const { draft, updateDraft } = useMatchCreationStore();
+  const hasHydrated = useHasHydrated(useMatchCreationStore.persist);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const timeZones = commonTimeZones();
 
   useEffect(() => {
+    if (!hasHydrated) return;
     if (!draft.timeZone) {
       updateDraft({ timeZone: timeZones[0] });
     }
     const redirect = guardRedirect(draft, "schedule");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasHydrated]);
 
   const errors = validateScheduleStep(draft);
 

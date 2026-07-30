@@ -11,6 +11,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect, validateSquadStep, MIN_SQUAD_SIZE } from "@/lib/matchSetup/validation";
 import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/types";
@@ -23,6 +24,7 @@ export default function SquadManagementPage() {
   const router = useRouter();
   const { fixtureId, matches } = useSetupFixture();
   const { draft, setTeamA, setTeamB } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const [active, setActive] = useState<TeamKey>("A");
   const [query, setQuery] = useState("");
   const [sortDesc, setSortDesc] = useState(false);
@@ -31,11 +33,11 @@ export default function SquadManagementPage() {
   const [touched, setTouched] = useState(false);
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "squad");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   const team = active === "A" ? draft.teamA : draft.teamB;
   const setTeam = active === "A" ? setTeamA : setTeamB;

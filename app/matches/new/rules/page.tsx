@@ -9,6 +9,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { Card } from "@/components/ui/card";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { guardRedirect, validateRulesStep } from "@/lib/matchCreation/validation";
 import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
 import { RETIREMENT_OPTIONS } from "@/lib/matchCreation/defaults";
@@ -19,15 +20,17 @@ const SELECT_CLASS =
 export default function CompetitionRulesStep() {
   const router = useRouter();
   const { draft, updateRules } = useMatchCreationStore();
+  const hasHydrated = useHasHydrated(useMatchCreationStore.persist);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const isTest = draft.format === "Test";
   const errors = validateRulesStep(draft);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     const redirect = guardRedirect(draft, "rules");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasHydrated]);
 
   function markTouched(field: string) {
     setTouched((t) => ({ ...t, [field]: true }));

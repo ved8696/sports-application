@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { FieldError } from "@/components/match-creation/form-field";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect, validateTossStep, toFixtureToss } from "@/lib/matchSetup/validation";
@@ -18,6 +19,7 @@ export default function TossPage() {
   const router = useRouter();
   const { fixtureId } = useSetupFixture();
   const { draft, setToss } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const { updateFixture } = useFixtureStore();
   const [flipping, setFlipping] = useState(false);
   const [spins, setSpins] = useState(0);
@@ -26,11 +28,11 @@ export default function TossPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "toss");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   const errors = validateTossStep(draft);
 

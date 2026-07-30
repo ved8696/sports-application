@@ -12,17 +12,31 @@ import type { LucideIcon } from "lucide-react";
 
 type Slot = "striker" | "nonStriker" | "bowler" | null;
 
-// Shown before the first ball -- Sprint 3's Match Ready screen confirms
-// captains/keeper but doesn't ask who opens, which is genuinely a
-// live-scoring-time decision (openers are often only finalized at the
-// crease). Reuses Fixture.teams/toss/playingXI directly, no new model.
-export function OpenerSetup({ fixture }: { fixture: Fixture }) {
+// Shown before the first ball of either innings -- Sprint 3's Match Ready
+// screen confirms captains/keeper but doesn't ask who opens, which is
+// genuinely a live-scoring-time decision. Reuses Fixture.teams/toss/
+// playingXI directly, no new model. For innings 1, batting/bowling teams
+// come from the toss; for innings 2 the caller passes them explicitly (the
+// side that bowled first now bats).
+export function OpenerSetup({
+  fixture,
+  inningsNumber = 1,
+  battingTeam: battingTeamProp,
+  bowlingTeam: bowlingTeamProp,
+}: {
+  fixture: Fixture;
+  inningsNumber?: 1 | 2;
+  battingTeam?: string;
+  bowlingTeam?: string;
+}) {
   const start = useLiveScoringStore((s) => s.start);
+  const startSecondInnings = useLiveScoringStore((s) => s.startSecondInnings);
   const status = useLiveScoringStore((s) => s.status);
+  const saving = useLiveScoringStore((s) => s.saving);
   const error = useLiveScoringStore((s) => s.error);
 
-  const battingTeam = battingFirstTeam(fixture);
-  const bowlingTeam = bowlingFirstTeam(fixture);
+  const battingTeam = battingTeamProp ?? battingFirstTeam(fixture);
+  const bowlingTeam = bowlingTeamProp ?? bowlingFirstTeam(fixture);
   const battingXI = fixture.playingXI?.find((x) => x.team === battingTeam)?.players ?? [];
   const bowlingXI = fixture.playingXI?.find((x) => x.team === bowlingTeam)?.players ?? [];
 
@@ -32,16 +46,24 @@ export function OpenerSetup({ fixture }: { fixture: Fixture }) {
   const [sheet, setSheet] = useState<Slot>(null);
 
   const ready = Boolean(striker && nonStriker && bowler);
+  const busy = status === "loading" || saving;
 
   function handleStart() {
     if (!striker || !nonStriker || !bowler) return;
-    start(fixture.id, { strikerName: striker, nonStrikerName: nonStriker, bowlerName: bowler });
+    const openers = { strikerName: striker, nonStrikerName: nonStriker, bowlerName: bowler };
+    if (inningsNumber === 2) {
+      startSecondInnings(openers);
+    } else {
+      start(fixture.id, openers);
+    }
   }
 
   return (
     <div className="flex flex-col gap-4 pt-1">
       <Card className="p-4">
-        <p className="text-[10.5px] font-semibold uppercase tracking-wide text-wood">First Innings</p>
+        <p className="text-[10.5px] font-semibold uppercase tracking-wide text-wood">
+          {inningsNumber === 2 ? "Second Innings" : "First Innings"}
+        </p>
         <p className="mt-1 text-[15px] font-bold">
           {battingTeam} <span className="font-normal text-muted-2">batting</span>
         </p>
@@ -54,8 +76,8 @@ export function OpenerSetup({ fixture }: { fixture: Fixture }) {
 
       {error && <p className="text-xs text-red">{error}</p>}
 
-      <Button onClick={handleStart} disabled={!ready || status === "loading"}>
-        {status === "loading" ? "Starting…" : "Start Innings"}
+      <Button onClick={handleStart} disabled={!ready || busy}>
+        {busy ? "Starting…" : "Start Innings"}
       </Button>
 
       <PlayerPickerSheet

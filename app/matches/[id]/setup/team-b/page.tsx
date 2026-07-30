@@ -10,6 +10,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { OptionCard } from "@/components/match-creation/option-card";
 import { FieldLabel, FieldError } from "@/components/match-creation/form-field";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect, validateTeamBStep } from "@/lib/matchSetup/validation";
 import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/types";
@@ -20,17 +21,18 @@ export default function TeamBSelectPage() {
   const router = useRouter();
   const { fixtureId, matches, matchStatus } = useSetupFixture();
   const { draft, setTeamB } = useMatchSetupStore();
+  const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
   const [search, setSearch] = useState("");
   const [touched, setTouched] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
 
   useEffect(() => {
-    if (!fixtureId) return;
+    if (!fixtureId || !hasHydrated) return;
     const redirect = guardRedirect(fixtureId, draft, "team-b");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fixtureId]);
+  }, [fixtureId, hasHydrated]);
 
   const excludeName = draft.teamA.name;
   const groups = useMemo(

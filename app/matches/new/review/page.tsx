@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ReviewSection, SummaryRow } from "@/components/match-creation/review-section";
 import { useMatchCreationStore } from "@/lib/store/match-creation-store";
+import { useHasHydrated } from "@/lib/store/useHasHydrated";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { guardRedirect, toFixtureDraft } from "@/lib/matchCreation/validation";
 import { WIZARD_STEPS, STEP_TITLE } from "@/lib/matchCreation/types";
@@ -40,15 +41,17 @@ function formatTime(hhmm: string): string {
 export default function ReviewMatchStep() {
   const router = useRouter();
   const { draft, reset } = useMatchCreationStore();
+  const hasHydrated = useHasHydrated(useMatchCreationStore.persist);
   const { createFixture } = useFixtureStore();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     const redirect = guardRedirect(draft, "review");
     if (redirect) router.replace(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasHydrated]);
 
   async function handleCreate() {
     setSubmitting(true);

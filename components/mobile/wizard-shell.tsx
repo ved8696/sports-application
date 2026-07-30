@@ -25,7 +25,7 @@ export function WizardShell({
   footer: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <header className="flex-none px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
         <div className="flex items-center gap-3">
           <Link
@@ -48,7 +48,7 @@ export function WizardShell({
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4">{children}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-4">{children}</div>
 
       <footer
         className="flex-none border-t border-white/[0.06] bg-background/95 px-5 pt-3 backdrop-blur-md"

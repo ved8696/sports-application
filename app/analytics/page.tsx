@@ -23,7 +23,7 @@ export default function AnalyticsPage() {
     .join(" · ");
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <header
         className="flex flex-none items-center gap-3 px-5 pb-4"
         style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}
@@ -40,7 +40,7 @@ export default function AnalyticsPage() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-8">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8">
         {(data.status === "idle" || data.status === "loading") && (
           <Card className="flex items-center justify-center gap-2.5 py-16 text-sm text-muted">
             <Loader2 size={16} className="animate-spin text-blue" />
