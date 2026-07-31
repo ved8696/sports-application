@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MoreHorizontal, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { ConfirmSheet } from "@/components/ui/confirm-sheet";
 import { cn } from "@/lib/utils";
 
 const RUN_VALUES = [0, 1, 2, 3, 4, 5, 6];
@@ -93,19 +94,14 @@ export function ScoringPad({
         </Button>
       </div>
 
-      <BottomSheet open={undoOpen} onOpenChange={setUndoOpen} title="Undo Last Ball?">
-        <div className="flex flex-col gap-4 pb-2">
-          <p className="text-[13px] text-muted">This removes the most recent ball from the innings and restores the previous state.</p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <Button variant="outline" onClick={() => setUndoOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="danger" onClick={confirmUndo}>
-              Undo
-            </Button>
-          </div>
-        </div>
-      </BottomSheet>
+      <ConfirmSheet
+        open={undoOpen}
+        onOpenChange={setUndoOpen}
+        title="Undo Last Ball?"
+        description="This removes the most recent ball from the innings and restores the previous state."
+        confirmLabel="Undo"
+        onConfirm={confirmUndo}
+      />
 
       <BottomSheet open={moreOpen} onOpenChange={setMoreOpen} title="More">
         <div className="flex flex-col gap-2 pb-4">

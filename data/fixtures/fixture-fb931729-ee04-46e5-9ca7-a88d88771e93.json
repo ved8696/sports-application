@@ -1,0 +1,110 @@
+{
+  "name": "Centre Test Match 5ky4ta",
+  "tournament": {
+    "type": "friendly",
+    "name": "Centre Series 5ky4ta"
+  },
+  "format": "Custom",
+  "overs": 1,
+  "ballType": "Red",
+  "gender": "male",
+  "ageGroup": "Open",
+  "matchType": "League Stage",
+  "venue": {
+    "name": "Centre Ground 5ky4ta",
+    "city": "Centreville"
+  },
+  "date": "2026-08-15",
+  "startTime": "14:30",
+  "timeZone": "Asia/Calcutta",
+  "dayNight": "Day",
+  "rules": {
+    "oversPerInnings": 1,
+    "powerplayOvers": null,
+    "superOver": true,
+    "dls": true,
+    "wideRuns": 1,
+    "noBallRuns": 1,
+    "freeHit": true,
+    "retirement": "retired-out"
+  },
+  "id": "fixture-fb931729-ee04-46e5-9ca7-a88d88771e93",
+  "createdAt": "2026-07-31T20:23:25.952Z",
+  "status": "Completed",
+  "teams": [
+    {
+      "name": "Centre Alpha 5ky4ta",
+      "squad": [
+        "Alpha P1",
+        "Alpha P2",
+        "Alpha P3",
+        "Alpha P4",
+        "Alpha P5",
+        "Alpha P6",
+        "Alpha P7",
+        "Alpha P8",
+        "Alpha P9",
+        "Alpha P10",
+        "Alpha P11"
+      ]
+    },
+    {
+      "name": "Centre Beta 5ky4ta",
+      "squad": [
+        "Beta P1",
+        "Beta P2",
+        "Beta P3",
+        "Beta P4",
+        "Beta P5",
+        "Beta P6",
+        "Beta P7",
+        "Beta P8",
+        "Beta P9",
+        "Beta P10",
+        "Beta P11"
+      ]
+    }
+  ],
+  "playingXI": [
+    {
+      "team": "Centre Alpha 5ky4ta",
+      "players": [
+        "Alpha P1",
+        "Alpha P2",
+        "Alpha P3",
+        "Alpha P4",
+        "Alpha P5",
+        "Alpha P6",
+        "Alpha P7",
+        "Alpha P8",
+        "Alpha P9",
+        "Alpha P10",
+        "Alpha P11"
+      ],
+      "captain": "Alpha P1",
+      "wicketKeeper": "Alpha P1"
+    },
+    {
+      "team": "Centre Beta 5ky4ta",
+      "players": [
+        "Beta P1",
+        "Beta P2",
+        "Beta P3",
+        "Beta P4",
+        "Beta P5",
+        "Beta P6",
+        "Beta P7",
+        "Beta P8",
+        "Beta P9",
+        "Beta P10",
+        "Beta P11"
+      ],
+      "captain": "Beta P1",
+      "wicketKeeper": "Beta P1"
+    }
+  ],
+  "toss": {
+    "winner": "Centre Alpha 5ky4ta",
+    "decision": "bat"
+  }
+}

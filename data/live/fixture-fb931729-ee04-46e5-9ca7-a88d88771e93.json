@@ -1,0 +1,657 @@
+{
+  "fixtureId": "fixture-fb931729-ee04-46e5-9ca7-a88d88771e93",
+  "status": "completed",
+  "currentInnings": 2,
+  "format": "Custom",
+  "oversLimit": 1,
+  "rules": {
+    "oversPerInnings": 1,
+    "powerplayOvers": null,
+    "superOver": true,
+    "dls": true,
+    "wideRuns": 1,
+    "noBallRuns": 1,
+    "freeHit": true,
+    "retirement": "retired-out"
+  },
+  "venue": {
+    "name": "Centre Ground 5ky4ta",
+    "city": "Centreville"
+  },
+  "ballType": "Red",
+  "gender": "male",
+  "dayNight": "Day",
+  "innings1": {
+    "inningsNumber": 1,
+    "battingTeam": "Centre Alpha 5ky4ta",
+    "bowlingTeam": "Centre Beta 5ky4ta",
+    "status": "completed",
+    "totalRuns": 12,
+    "totalWickets": 1,
+    "legalBalls": 6,
+    "extrasTotal": {
+      "wide": 0,
+      "no-ball": 0,
+      "bye": 0,
+      "leg-bye": 0,
+      "penalty": 0
+    },
+    "strikerName": "Alpha P2",
+    "nonStrikerName": "Alpha P3",
+    "currentBowlerName": null,
+    "previousOverBowlerName": "Beta P1",
+    "isFreeHit": false,
+    "currentOverEvents": [],
+    "completedOvers": [
+      [
+        {
+          "id": "ball-1785529427234-1",
+          "timestamp": "2026-07-31T20:23:47.234Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 1,
+          "strikerName": "Alpha P1",
+          "nonStrikerName": "Alpha P2",
+          "bowlerName": "Beta P1",
+          "runsBat": 4,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": null,
+          "totalRuns": 4
+        },
+        {
+          "id": "ball-1785529427519-2",
+          "timestamp": "2026-07-31T20:23:47.519Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 2,
+          "strikerName": "Alpha P1",
+          "nonStrikerName": "Alpha P2",
+          "bowlerName": "Beta P1",
+          "runsBat": 1,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": null,
+          "totalRuns": 1
+        },
+        {
+          "id": "ball-1785529427801-3",
+          "timestamp": "2026-07-31T20:23:47.801Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 3,
+          "strikerName": "Alpha P2",
+          "nonStrikerName": "Alpha P1",
+          "bowlerName": "Beta P1",
+          "runsBat": 0,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": null,
+          "totalRuns": 0
+        },
+        {
+          "id": "ball-1785529428067-4",
+          "timestamp": "2026-07-31T20:23:48.067Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 4,
+          "strikerName": "Alpha P2",
+          "nonStrikerName": "Alpha P1",
+          "bowlerName": "Beta P1",
+          "runsBat": 1,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": null,
+          "totalRuns": 1
+        },
+        {
+          "id": "ball-1785529428727-5",
+          "timestamp": "2026-07-31T20:23:48.727Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 5,
+          "strikerName": "Alpha P1",
+          "nonStrikerName": "Alpha P2",
+          "bowlerName": "Beta P1",
+          "runsBat": 0,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": {
+            "type": "bowled",
+            "playerOut": "Alpha P1"
+          },
+          "totalRuns": 0
+        },
+        {
+          "id": "ball-1785529429653-6",
+          "timestamp": "2026-07-31T20:23:49.653Z",
+          "inningsNumber": 1,
+          "overNumber": 0,
+          "ballInOver": 6,
+          "strikerName": "Alpha P3",
+          "nonStrikerName": "Alpha P2",
+          "bowlerName": "Beta P1",
+          "runsBat": 6,
+          "extra": null,
+          "extraRuns": 0,
+          "isLegal": true,
+          "isFreeHit": false,
+          "wicket": null,
+          "totalRuns": 6
+        }
+      ]
+    ],
+    "events": [
+      {
+        "id": "ball-1785529427234-1",
+        "timestamp": "2026-07-31T20:23:47.234Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 1,
+        "strikerName": "Alpha P1",
+        "nonStrikerName": "Alpha P2",
+        "bowlerName": "Beta P1",
+        "runsBat": 4,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 4
+      },
+      {
+        "id": "ball-1785529427519-2",
+        "timestamp": "2026-07-31T20:23:47.519Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 2,
+        "strikerName": "Alpha P1",
+        "nonStrikerName": "Alpha P2",
+        "bowlerName": "Beta P1",
+        "runsBat": 1,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 1
+      },
+      {
+        "id": "ball-1785529427801-3",
+        "timestamp": "2026-07-31T20:23:47.801Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 3,
+        "strikerName": "Alpha P2",
+        "nonStrikerName": "Alpha P1",
+        "bowlerName": "Beta P1",
+        "runsBat": 0,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 0
+      },
+      {
+        "id": "ball-1785529428067-4",
+        "timestamp": "2026-07-31T20:23:48.067Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 4,
+        "strikerName": "Alpha P2",
+        "nonStrikerName": "Alpha P1",
+        "bowlerName": "Beta P1",
+        "runsBat": 1,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 1
+      },
+      {
+        "id": "ball-1785529428727-5",
+        "timestamp": "2026-07-31T20:23:48.727Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 5,
+        "strikerName": "Alpha P1",
+        "nonStrikerName": "Alpha P2",
+        "bowlerName": "Beta P1",
+        "runsBat": 0,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": {
+          "type": "bowled",
+          "playerOut": "Alpha P1"
+        },
+        "totalRuns": 0
+      },
+      {
+        "id": "ball-1785529429653-6",
+        "timestamp": "2026-07-31T20:23:49.653Z",
+        "inningsNumber": 1,
+        "overNumber": 0,
+        "ballInOver": 6,
+        "strikerName": "Alpha P3",
+        "nonStrikerName": "Alpha P2",
+        "bowlerName": "Beta P1",
+        "runsBat": 6,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 6
+      }
+    ],
+    "batters": {
+      "Alpha P1": {
+        "name": "Alpha P1",
+        "battingOrder": 1,
+        "runs": 5,
+        "balls": 3,
+        "fours": 1,
+        "sixes": 0,
+        "isOut": true,
+        "isRetired": false,
+        "dismissal": {
+          "type": "bowled",
+          "playerOut": "Alpha P1"
+        },
+        "strikeRate": 166.7
+      },
+      "Alpha P2": {
+        "name": "Alpha P2",
+        "battingOrder": 2,
+        "runs": 1,
+        "balls": 2,
+        "fours": 0,
+        "sixes": 0,
+        "isOut": false,
+        "isRetired": false,
+        "dismissal": null,
+        "strikeRate": 50
+      },
+      "Alpha P3": {
+        "name": "Alpha P3",
+        "battingOrder": 3,
+        "runs": 6,
+        "balls": 1,
+        "fours": 0,
+        "sixes": 1,
+        "isOut": false,
+        "isRetired": false,
+        "dismissal": null,
+        "strikeRate": 600
+      }
+    },
+    "battingOrder": [
+      "Alpha P1",
+      "Alpha P2",
+      "Alpha P3"
+    ],
+    "bowlers": {
+      "Beta P1": {
+        "name": "Beta P1",
+        "legalBalls": 6,
+        "runsConceded": 12,
+        "wickets": 1,
+        "maidens": 0,
+        "economy": 12,
+        "oversLabel": "1.0"
+      }
+    },
+    "fallOfWickets": [
+      {
+        "wicketNumber": 1,
+        "teamRuns": 6,
+        "overLabel": "0.5",
+        "playerOut": "Alpha P1",
+        "dismissal": "bowled"
+      }
+    ],
+    "partnerships": [
+      {
+        "batterA": "Alpha P1",
+        "batterB": "Alpha P2",
+        "runs": 6,
+        "balls": 5,
+        "startOverLabel": "0.0",
+        "active": false
+      },
+      {
+        "batterA": "Alpha P3",
+        "batterB": "Alpha P2",
+        "runs": 6,
+        "balls": 1,
+        "startOverLabel": "0.5",
+        "active": false
+      }
+    ],
+    "endReason": "overs-completed"
+  },
+  "innings2": {
+    "inningsNumber": 2,
+    "battingTeam": "Centre Beta 5ky4ta",
+    "bowlingTeam": "Centre Alpha 5ky4ta",
+    "status": "completed",
+    "totalRuns": 13,
+    "totalWickets": 0,
+    "legalBalls": 3,
+    "extrasTotal": {
+      "wide": 0,
+      "no-ball": 0,
+      "bye": 0,
+      "leg-bye": 0,
+      "penalty": 0
+    },
+    "strikerName": "Beta P2",
+    "nonStrikerName": "Beta P1",
+    "currentBowlerName": "Alpha P1",
+    "previousOverBowlerName": null,
+    "isFreeHit": false,
+    "currentOverEvents": [
+      {
+        "id": "ball-1785529772088-1",
+        "timestamp": "2026-07-31T20:29:32.088Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 1,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 6,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 6
+      },
+      {
+        "id": "ball-1785529772403-2",
+        "timestamp": "2026-07-31T20:29:32.403Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 2,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 6,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 6
+      },
+      {
+        "id": "ball-1785529772738-3",
+        "timestamp": "2026-07-31T20:29:32.738Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 3,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 1,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 1
+      }
+    ],
+    "completedOvers": [],
+    "events": [
+      {
+        "id": "ball-1785529772088-1",
+        "timestamp": "2026-07-31T20:29:32.088Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 1,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 6,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 6
+      },
+      {
+        "id": "ball-1785529772403-2",
+        "timestamp": "2026-07-31T20:29:32.403Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 2,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 6,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 6
+      },
+      {
+        "id": "ball-1785529772738-3",
+        "timestamp": "2026-07-31T20:29:32.738Z",
+        "inningsNumber": 2,
+        "overNumber": 0,
+        "ballInOver": 3,
+        "strikerName": "Beta P1",
+        "nonStrikerName": "Beta P2",
+        "bowlerName": "Alpha P1",
+        "runsBat": 1,
+        "extra": null,
+        "extraRuns": 0,
+        "isLegal": true,
+        "isFreeHit": false,
+        "wicket": null,
+        "totalRuns": 1
+      }
+    ],
+    "batters": {
+      "Beta P1": {
+        "name": "Beta P1",
+        "battingOrder": 1,
+        "runs": 13,
+        "balls": 3,
+        "fours": 0,
+        "sixes": 2,
+        "isOut": false,
+        "isRetired": false,
+        "dismissal": null,
+        "strikeRate": 433.3
+      },
+      "Beta P2": {
+        "name": "Beta P2",
+        "battingOrder": 2,
+        "runs": 0,
+        "balls": 0,
+        "fours": 0,
+        "sixes": 0,
+        "isOut": false,
+        "isRetired": false,
+        "dismissal": null,
+        "strikeRate": 0
+      }
+    },
+    "battingOrder": [
+      "Beta P1",
+      "Beta P2"
+    ],
+    "bowlers": {
+      "Alpha P1": {
+        "name": "Alpha P1",
+        "legalBalls": 3,
+        "runsConceded": 13,
+        "wickets": 0,
+        "maidens": 0,
+        "economy": 26,
+        "oversLabel": "0.3"
+      }
+    },
+    "fallOfWickets": [],
+    "partnerships": [
+      {
+        "batterA": "Beta P1",
+        "batterB": "Beta P2",
+        "runs": 13,
+        "balls": 3,
+        "startOverLabel": "0.0",
+        "active": false
+      }
+    ],
+    "endReason": "target-reached"
+  },
+  "result": {
+    "type": "win",
+    "winner": "Centre Beta 5ky4ta",
+    "marginWickets": 10,
+    "summaryText": "Centre Beta 5ky4ta won by 10 wickets"
+  },
+  "report": {
+    "summary": "Centre Beta 5ky4ta won by 10 wickets",
+    "highestPartnership": {
+      "batters": [
+        "Beta P1",
+        "Beta P2"
+      ],
+      "runs": 13,
+      "inningsNumber": 2
+    },
+    "turningPoint": "Centre Beta 5ky4ta sealed the chase with 10 wickets in hand.",
+    "topPerformers": [],
+    "highlights": [
+      {
+        "label": "Wicket: Alpha P1",
+        "inningsNumber": 1,
+        "overLabel": "0.5"
+      },
+      {
+        "label": "Six: Alpha P3",
+        "inningsNumber": 1,
+        "overLabel": "0.6"
+      },
+      {
+        "label": "Six: Beta P1",
+        "inningsNumber": 2,
+        "overLabel": "0.1"
+      },
+      {
+        "label": "Six: Beta P1",
+        "inningsNumber": 2,
+        "overLabel": "0.2"
+      }
+    ]
+  },
+  "potm": {
+    "playerOfMatch": {
+      "name": "Beta P1",
+      "team": "Centre Beta 5ky4ta",
+      "breakdown": {
+        "battingPoints": 17,
+        "bowlingPoints": 20,
+        "fieldingPoints": 0,
+        "total": 37
+      }
+    },
+    "bestBatter": {
+      "name": "Beta P1",
+      "team": "Centre Beta 5ky4ta",
+      "breakdown": {
+        "battingPoints": 17,
+        "bowlingPoints": 20,
+        "fieldingPoints": 0,
+        "total": 37
+      }
+    },
+    "bestBowler": {
+      "name": "Beta P1",
+      "team": "Centre Beta 5ky4ta",
+      "breakdown": {
+        "battingPoints": 17,
+        "bowlingPoints": 20,
+        "fieldingPoints": 0,
+        "total": 37
+      }
+    },
+    "bestFielder": null,
+    "allScores": [
+      {
+        "name": "Beta P1",
+        "team": "Centre Beta 5ky4ta",
+        "breakdown": {
+          "battingPoints": 17,
+          "bowlingPoints": 20,
+          "fieldingPoints": 0,
+          "total": 37
+        }
+      },
+      {
+        "name": "Alpha P3",
+        "team": "Centre Alpha 5ky4ta",
+        "breakdown": {
+          "battingPoints": 8,
+          "bowlingPoints": 0,
+          "fieldingPoints": 0,
+          "total": 8
+        }
+      },
+      {
+        "name": "Alpha P1",
+        "team": "Centre Alpha 5ky4ta",
+        "breakdown": {
+          "battingPoints": 6,
+          "bowlingPoints": 0,
+          "fieldingPoints": 0,
+          "total": 6
+        }
+      },
+      {
+        "name": "Alpha P2",
+        "team": "Centre Alpha 5ky4ta",
+        "breakdown": {
+          "battingPoints": 1,
+          "bowlingPoints": 0,
+          "fieldingPoints": 0,
+          "total": 1
+        }
+      },
+      {
+        "name": "Beta P2",
+        "team": "Centre Beta 5ky4ta",
+        "breakdown": {
+          "battingPoints": 0,
+          "bowlingPoints": 0,
+          "fieldingPoints": 0,
+          "total": 0
+        }
+      }
+    ]
+  },
+  "startedAt": "2026-07-31T20:23:43.868Z",
+  "completedAt": "2026-07-31T20:29:32.740Z",
+  "updatedAt": "2026-07-31T20:29:32.781Z"
+}

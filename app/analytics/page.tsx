@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { AlertTriangle, FileBarChart } from "lucide-react";
+import { EmptyState, LoadingState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { SearchAiButton } from "@/components/search/search-ai-button";
 import { FilterBar } from "@/components/analytics/filter-bar";
 import { KpiCards } from "@/components/analytics/kpi-cards";
@@ -25,43 +25,22 @@ export default function AnalyticsPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header
-        className="flex flex-none items-center gap-3 px-5 pb-4"
-        style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}
-      >
-        <Link
-          href="/dashboard"
-          className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted"
-        >
-          <ArrowLeft size={16} />
-        </Link>
-        <div className="min-w-0 flex-1">
-          <h1 className="text-lg font-extrabold">Analytics</h1>
-          <p className="text-[11px] text-muted">Deep-dive stats across every tracked match</p>
-        </div>
-        <SearchAiButton />
-      </header>
+      <ScreenHeader
+        backHref="/dashboard"
+        title="Analytics"
+        subtitle="Deep-dive stats across every tracked match"
+        trailing={<SearchAiButton />}
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8">
-        {(data.status === "idle" || data.status === "loading") && (
-          <Card className="flex items-center justify-center gap-2.5 py-16 text-sm text-muted">
-            <Loader2 size={16} className="animate-spin text-blue" />
-            Loading match data…
-          </Card>
-        )}
+      <ScreenBody>
+        {(data.status === "idle" || data.status === "loading") && <LoadingState label="Loading match data…" />}
 
         {data.status === "error" && (
-          <Card className="flex flex-col items-center gap-2 py-16 text-center">
-            <AlertTriangle size={18} className="text-red" />
-            <p className="text-sm font-semibold">Couldn&apos;t load cricket data</p>
-            <p className="text-xs text-muted">{data.error}</p>
-          </Card>
+          <EmptyState icon={AlertTriangle} title="Couldn't load cricket data" description={data.error ?? undefined} tone="danger" />
         )}
 
         {data.status === "ready" && data.isEmpty && (
-          <Card className="flex flex-col items-center gap-2 py-16 text-center text-sm text-muted">
-            No match data found in /data.
-          </Card>
+          <EmptyState icon={FileBarChart} title="No match data found" description="Drop Cricsheet-format match JSON files into /data and reload." />
         )}
 
         {data.status === "ready" && !data.isEmpty && (
@@ -80,7 +59,7 @@ export default function AnalyticsPage() {
             />
           </div>
         )}
-      </div>
+      </ScreenBody>
     </div>
   );
 }

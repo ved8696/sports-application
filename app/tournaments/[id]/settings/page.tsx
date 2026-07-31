@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { ConfirmSheet } from "@/components/ui/confirm-sheet";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { useTournamentStore } from "@/lib/store/tournament-store";
 import type { TournamentVisibility } from "@/lib/tournament/types";
 
@@ -56,14 +57,9 @@ export default function TournamentSettingsPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center gap-3 px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <Link href={`/tournaments/${id}`} className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="text-lg font-extrabold">Settings</h1>
-      </header>
+      <ScreenHeader backHref={`/tournaments/${id}`} title="Settings" />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-4">
+      <ScreenBody>
         <p className="mb-2 text-[10px] font-bold uppercase tracking-wide text-muted-2">General</p>
         <Card className="mb-4 divide-y divide-border p-0">
           <SettingsRow label="Tournament Information" onClick={() => setEditing("info")} />
@@ -89,7 +85,7 @@ export default function TournamentSettingsPage() {
           <SettingsRow label="Archive Tournament" onClick={() => setArchiveOpen(true)} />
           <SettingsRow label="! Delete Tournament" onClick={() => setDeleteOpen(true)} danger />
         </Card>
-      </div>
+      </ScreenBody>
 
       <BottomSheet open={editing === "info"} onOpenChange={(o) => !o && setEditing(null)} title="Tournament Information">
         <InfoForm tournamentId={id} name={tournament.name} description={tournament.description} onDone={() => setEditing(null)} />
@@ -99,26 +95,26 @@ export default function TournamentSettingsPage() {
         <RulesForm tournamentId={id} oversPerInnings={tournament.rules.oversPerInnings} onDone={() => setEditing(null)} />
       </BottomSheet>
 
-      <BottomSheet open={archiveOpen} onOpenChange={setArchiveOpen} title="Archive Tournament">
-        <div className="flex flex-col gap-3 pb-2">
-          <p className="text-[12px] text-muted">Archived tournaments are hidden from the dashboard but not deleted. You can find them later from Settings.</p>
-          <Button onClick={handleArchive} disabled={busy}>
-            {busy ? "Archiving…" : "Archive Tournament"}
-          </Button>
-        </div>
-      </BottomSheet>
+      <ConfirmSheet
+        open={archiveOpen}
+        onOpenChange={setArchiveOpen}
+        title="Archive Tournament"
+        description="Archived tournaments are hidden from the dashboard but not deleted. You can find them later from Settings."
+        confirmLabel="Archive Tournament"
+        danger={false}
+        busy={busy}
+        onConfirm={handleArchive}
+      />
 
-      <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title="Delete Tournament">
-        <div className="flex flex-col gap-3 pb-2">
-          <p className="flex items-start gap-2 text-[12px] text-red">
-            <AlertTriangle size={14} className="mt-0.5 flex-none" />
-            This permanently deletes &quot;{tournament.name}&quot;. Matches already created will remain in Matches, but will no longer be linked to a tournament.
-          </p>
-          <Button variant="danger" onClick={handleDelete} disabled={busy}>
-            {busy ? "Deleting…" : "Delete Tournament"}
-          </Button>
-        </div>
-      </BottomSheet>
+      <ConfirmSheet
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title="Delete Tournament"
+        description={`This permanently deletes "${tournament.name}". Matches already created will remain in Matches, but will no longer be linked to a tournament.`}
+        confirmLabel="Delete Tournament"
+        busy={busy}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

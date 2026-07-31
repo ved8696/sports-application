@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { SearchX } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { useSettingsStore } from "@/lib/store/settings-store";
 import { PROFILE_FIELD_LABEL, PROFILE_FIELD_MAX_LENGTH, type ProfileFieldKey } from "@/lib/settings/types";
 import { cn } from "@/lib/utils";
@@ -33,11 +36,20 @@ export default function EditProfileFieldPage() {
 
   if (!valid) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
-        <p className="text-sm font-semibold">Unknown field</p>
-        <Link href="/settings/profile" className="text-xs font-semibold text-blue">
-          Back to Profile
-        </Link>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <ScreenHeader backHref="/settings/profile" title="Profile" />
+        <ScreenBody className="flex flex-col justify-center">
+          <EmptyState
+            icon={SearchX}
+            title="Unknown field"
+            description="This profile field may have been removed, or the link is incorrect."
+            action={
+              <Button size="sm" asChild>
+                <Link href="/settings/profile">Back to Profile</Link>
+              </Button>
+            }
+          />
+        </ScreenBody>
       </div>
     );
   }
@@ -54,22 +66,22 @@ export default function EditProfileFieldPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center gap-3 px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <Link href="/settings/profile" className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="flex-1 text-lg font-extrabold">Edit {label}</h1>
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={!dirty}
-          className={cn("text-[13px] font-bold", dirty ? "text-blue" : "text-muted-2")}
-        >
-          Save
-        </button>
-      </header>
+      <ScreenHeader
+        backHref="/settings/profile"
+        title={`Edit ${label}`}
+        trailing={
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!dirty}
+            className={cn("text-[13px] font-bold", dirty ? "text-blue" : "text-muted-2")}
+          >
+            Save
+          </button>
+        }
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5">
+      <ScreenBody>
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-2">{label}</p>
         {type === "textarea" ? (
           <>
@@ -93,7 +105,7 @@ export default function EditProfileFieldPage() {
             className="h-11 w-full rounded-xl border border-border bg-surface px-3 text-[13px] text-foreground focus:border-blue/40 focus:outline-none focus:ring-1 focus:ring-blue/40"
           />
         )}
-      </div>
+      </ScreenBody>
     </div>
   );
 }

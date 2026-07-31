@@ -2,10 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus, Search, Loader2, AlertTriangle } from "lucide-react";
+import { Plus, Search, AlertTriangle, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EmptyState, LoadingState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useTournamentStore } from "@/lib/store/tournament-store";
 import { TOURNAMENT_FORMAT_LABEL } from "@/lib/tournament/types";
@@ -41,21 +43,23 @@ export default function TournamentDashboardPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center justify-between px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <h1 className="text-lg font-extrabold">Tournaments</h1>
-        <div className="flex flex-none items-center gap-2">
-          <SearchAiButton />
-          <Link
-            href="/tournaments/new"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background"
-            aria-label="Create tournament"
-          >
-            <Plus size={18} />
-          </Link>
-        </div>
-      </header>
+      <ScreenHeader
+        title="Tournaments"
+        trailing={
+          <>
+            <SearchAiButton />
+            <Link
+              href="/tournaments/new"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background"
+              aria-label="Create tournament"
+            >
+              <Plus size={18} />
+            </Link>
+          </>
+        }
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-24">
+      <ScreenBody padBottom="pb-24">
         <div className="relative mb-3">
           <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-2" />
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tournaments" className="pl-10" />
@@ -90,25 +94,16 @@ export default function TournamentDashboardPage() {
           </Card>
         </div>
 
-        {(status === "idle" || status === "loading") && (
-          <Card className="flex items-center justify-center gap-2.5 py-14 text-sm text-muted">
-            <Loader2 size={16} className="animate-spin text-blue" />
-            Loading tournaments…
-          </Card>
-        )}
+        {(status === "idle" || status === "loading") && <LoadingState label="Loading tournaments…" />}
 
-        {status === "error" && (
-          <Card className="flex flex-col items-center gap-2 py-14 text-center">
-            <AlertTriangle size={18} className="text-red" />
-            <p className="text-sm font-semibold">Couldn&apos;t load tournaments</p>
-            <p className="text-xs text-muted">{error}</p>
-          </Card>
-        )}
+        {status === "error" && <EmptyState icon={AlertTriangle} title="Couldn't load tournaments" description={error ?? undefined} tone="danger" />}
 
         {status === "ready" && filtered.length === 0 && (
-          <Card className="flex flex-col items-center gap-2 py-14 text-center text-sm text-muted">
-            {query || filter !== "All" ? "No tournaments match." : "No tournaments yet. Create your first one."}
-          </Card>
+          <EmptyState
+            icon={Trophy}
+            title={query || filter !== "All" ? "No tournaments match" : "No tournaments yet"}
+            description={query || filter !== "All" ? "Try a different search or filter." : "Create your first tournament to get started."}
+          />
         )}
 
         {status === "ready" && filtered.length > 0 && (
@@ -147,7 +142,7 @@ export default function TournamentDashboardPage() {
             )}
           </div>
         )}
-      </div>
+      </ScreenBody>
 
       <div className="flex-none px-5 pb-4" style={{ paddingBottom: "calc(var(--safe-bottom) + 16px)" }}>
         <Button asChild>

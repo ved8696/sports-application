@@ -2,7 +2,10 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { SearchX } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { CategoryContent } from "@/components/settings/category-content";
 import { CATEGORY_LABEL, SETTINGS_CATEGORIES, type SettingsCategory } from "@/lib/settings/types";
 
@@ -16,30 +19,39 @@ export default function SettingsCategoryPage() {
 
   if (!isValidCategory(categoryParam)) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
-        <p className="text-sm font-semibold">Setting not found</p>
-        <Link href="/settings" className="text-xs font-semibold text-blue">
-          Back to Settings
-        </Link>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <ScreenHeader backHref="/settings" title="Settings" />
+        <ScreenBody className="flex flex-col justify-center">
+          <EmptyState
+            icon={SearchX}
+            title="Setting not found"
+            description="This setting may have been removed, or the link is incorrect."
+            action={
+              <Button size="sm" asChild>
+                <Link href="/settings">Back to Settings</Link>
+              </Button>
+            }
+          />
+        </ScreenBody>
       </div>
     );
   }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center gap-3 px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <Link href="/settings" className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="flex-1 text-lg font-extrabold">{CATEGORY_LABEL[categoryParam]}</h1>
-        {categoryParam === "app-configuration" && (
-          <span className="flex-none rounded-md bg-foreground px-2 py-1 text-[9px] font-bold text-background">ADMIN</span>
-        )}
-      </header>
+      <ScreenHeader
+        backHref="/settings"
+        title={CATEGORY_LABEL[categoryParam]}
+        trailing={
+          categoryParam === "app-configuration" ? (
+            <span className="flex-none rounded-md bg-foreground px-2 py-1 text-[9px] font-bold text-background">ADMIN</span>
+          ) : undefined
+        }
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
+      <ScreenBody>
         <CategoryContent category={categoryParam} />
-      </div>
+      </ScreenBody>
     </div>
   );
 }

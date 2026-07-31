@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Bell, Loader2, AlertTriangle, PlusSquare, UserPlus, Shield, FileBarChart, CalendarClock, BarChart3, Trophy } from "lucide-react";
+import { Bell, AlertTriangle, PlusSquare, UserPlus, Shield, FileBarChart, CalendarClock, BarChart3, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { EmptyState, LoadingState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
+import { SectionLabel } from "@/components/mobile/section-label";
 import { SearchAiButton } from "@/components/search/search-ai-button";
 import { useCricketDashboard } from "@/lib/cricket/useCricketDashboard";
 import { useFixtureStore } from "@/lib/store/fixture-store";
@@ -71,45 +73,36 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header
-        className="flex flex-none items-center justify-between px-5 pb-4"
-        style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}
-      >
-        <div>
-          <p className="text-xs text-muted">{greeting()}</p>
-          <h1 className="text-lg font-extrabold">{displayName ?? "Welcome back"}</h1>
-        </div>
-        <div className="flex flex-none items-center gap-2">
-          <SearchAiButton />
-          <button className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
-            <Bell size={16} />
-          </button>
-        </div>
-      </header>
+      <ScreenHeader
+        title={
+          <>
+            <p className="text-xs text-muted">{greeting()}</p>
+            <h1 className="truncate text-lg font-extrabold">{displayName ?? "Welcome back"}</h1>
+          </>
+        }
+        trailing={
+          <>
+            <SearchAiButton />
+            <button className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
+              <Bell size={16} />
+            </button>
+          </>
+        }
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
-        {(status === "idle" || status === "loading") && (
-          <Card className="flex items-center justify-center gap-2.5 py-14 text-sm text-muted">
-            <Loader2 size={16} className="animate-spin text-blue" />
-            Loading match data…
-          </Card>
-        )}
+      <ScreenBody>
+        {(status === "idle" || status === "loading") && <LoadingState label="Loading match data…" />}
 
         {status === "error" && (
-          <Card className="flex flex-col items-center gap-2 py-14 text-center">
-            <AlertTriangle size={18} className="text-red" />
-            <p className="text-sm font-semibold">Couldn&apos;t load cricket data</p>
-            <p className="text-xs text-muted">{error}</p>
-          </Card>
+          <EmptyState icon={AlertTriangle} title="Couldn't load cricket data" description={error ?? undefined} tone="danger" />
         )}
 
         {status === "ready" && isEmpty && (
-          <Card className="flex flex-col items-center gap-2 py-14 text-center">
-            <p className="text-sm font-semibold">No match data found</p>
-            <p className="max-w-xs text-xs text-muted">
-              Drop Cricsheet-format match JSON files into <code>/data</code> and reload.
-            </p>
-          </Card>
+          <EmptyState
+            icon={FileBarChart}
+            title="No match data found"
+            description="Drop Cricsheet-format match JSON files into /data and reload."
+          />
         )}
 
         {status === "ready" && !isEmpty && (
@@ -183,13 +176,12 @@ export default function DashboardPage() {
             <section>
               <SectionLabel>Upcoming Matches</SectionLabel>
               {upcomingFixtures.length === 0 ? (
-                <Card className="flex flex-col items-center gap-2 py-8 text-center">
-                  <CalendarClock size={20} className="text-muted-2" />
-                  <p className="text-[13px] font-semibold">Nothing scheduled yet</p>
-                  <p className="max-w-[240px] text-[11.5px] text-muted-2">
-                    Tap &quot;Start New Match&quot; above to create your first fixture.
-                  </p>
-                </Card>
+                <EmptyState
+                  icon={CalendarClock}
+                  title="Nothing scheduled yet"
+                  description={'Tap "Start New Match" above to create your first fixture.'}
+                  size="compact"
+                />
               ) : (
                 <Card className="divide-y divide-white/[0.06] px-4">
                   {upcomingFixtures.map((f) => (
@@ -242,19 +234,7 @@ export default function DashboardPage() {
             </p>
           </div>
         )}
-      </div>
+      </ScreenBody>
     </div>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.p
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mb-2.5 border-l-2 border-wood pl-2 text-[11px] font-bold uppercase tracking-wide text-wood"
-    >
-      {children}
-    </motion.p>
   );
 }

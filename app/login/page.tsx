@@ -51,7 +51,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-6" style={{ paddingTop: "var(--safe-top)" }}>
+    <div
+      className="flex flex-1 flex-col items-center justify-center px-5"
+      style={{ paddingTop: "calc(var(--safe-top) + 20px)", paddingBottom: "calc(var(--safe-bottom) + 20px)" }}
+    >
       <div className="w-full max-w-sm">
         <div className="mb-9 flex items-center justify-center gap-2.5">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-wood to-walnut shadow-[0_0_24px_rgba(200,155,109,0.25)]">

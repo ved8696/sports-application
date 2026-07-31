@@ -123,7 +123,7 @@ export function SearchAiPanel() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="flex h-full w-full max-w-[480px] flex-col bg-background"
           >
-            <div className="flex flex-none items-center gap-2.5 px-4 pb-3" style={{ paddingTop: "calc(var(--safe-top) + 16px)" }}>
+            <div className="flex flex-none items-center gap-2.5 px-5 pb-4" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
               <div className="relative flex-1">
                 <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-2" />
                 <input
@@ -145,7 +145,7 @@ export function SearchAiPanel() {
             </div>
 
             {hasQuery && (
-              <div className="flex flex-none gap-1.5 overflow-x-auto px-4 pb-3">
+              <div className="flex flex-none gap-1.5 overflow-x-auto px-5 pb-3">
                 <FilterChip label="All" active={currentFilter === "all"} onClick={() => setFilter("all")} />
                 {SEARCH_CATEGORIES.map((c) => (
                   <FilterChip key={c} label={SEARCH_CATEGORY_LABEL[c]} active={currentFilter === c} onClick={() => setFilter(c)} />
@@ -153,7 +153,7 @@ export function SearchAiPanel() {
               </div>
             )}
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
               {!hasQuery && (
                 <div className="flex flex-col gap-5">
                   <section>

@@ -146,15 +146,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-/* Opt-in wider frame for the Settings module's tablet master-detail layout
-   (app/settings/layout.tsx toggles this attribute while mounted). Every
-   other route keeps the phone-width frame above -- this app has no other
-   tablet-specific layout today. */
-@media (min-width: 768px) {
-  #app[data-wide="true"] {
-    max-width: 900px;
-  }
-}
 @media (min-width: 560px) {
   body {
     display: flex;

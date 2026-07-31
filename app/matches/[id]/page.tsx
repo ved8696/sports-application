@@ -3,12 +3,36 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Loader2, AlertTriangle, MapPin, CalendarClock, Trophy, Layers, type LucideIcon } from "lucide-react";
+import { AlertTriangle, MapPin, CalendarClock, Trophy, Layers, SearchX, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs } from "@/components/ui/tabs";
+import { EmptyState, LoadingState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
+import { MatchHeaderCard } from "@/components/matches/match-header-card";
+import { LiveTab } from "@/components/matches/tabs/live-tab";
+import { ScorecardTab } from "@/components/matches/tabs/scorecard-tab";
+import { StatisticsTab } from "@/components/matches/tabs/statistics-tab";
+import { PlayersTab } from "@/components/matches/tabs/players-tab";
+import { CommentaryTab } from "@/components/matches/tabs/commentary-tab";
+import { TimelineTab } from "@/components/matches/tabs/timeline-tab";
+import { useFixtureStore } from "@/lib/store/fixture-store";
+import { useLiveScoringStore } from "@/lib/store/live-scoring-store";
 import { venueLabel } from "@/lib/matchCreation/defaults";
 import { resumeSetupStep, setupStepPath } from "@/lib/matchSetup/types";
-import type { Fixture } from "@/lib/cricket/fixture-types";
+
+type TabKey = "live" | "scorecard" | "statistics" | "players" | "commentary" | "timeline";
+
+const LIVE_TABS: { value: TabKey; label: string }[] = [
+  { value: "live", label: "Live" },
+  { value: "scorecard", label: "Scorecard" },
+  { value: "statistics", label: "Statistics" },
+  { value: "players", label: "Players" },
+  { value: "commentary", label: "Commentary" },
+  { value: "timeline", label: "Timeline" },
+];
+
+const COMPLETED_TABS: { value: TabKey; label: string }[] = LIVE_TABS.filter((t) => t.value !== "live");
 
 function formatDate(iso: string): string {
   if (!iso) return "—";
@@ -30,64 +54,62 @@ function formatTime(hhmm: string): string {
 
 export default function MatchDetailsScreen() {
   const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const [fixture, setFixture] = useState<Fixture | null>(null);
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const fixtureId = (Array.isArray(params.id) ? params.id[0] : params.id) as string;
+
+  const { fixtures, status: fixtureStatus, error: fixtureError, load: loadFixtures } = useFixtureStore();
+  const { state, status: liveStatus, error: liveError, load: loadLive } = useLiveScoringStore();
+  const [tab, setTab] = useState<TabKey | null>(null);
 
   useEffect(() => {
-    if (!id) return;
-    let cancelled = false;
-    fetch(`/api/fixtures/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Match not found.");
-        return res.json();
-      })
-      .then((data: { fixture: Fixture }) => {
-        if (!cancelled) {
-          setFixture(data.fixture);
-          setStatus("ready");
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setStatus("error");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
+    loadFixtures();
+  }, [loadFixtures]);
 
-  return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <header
-        className="flex flex-none items-center gap-3 px-5 pb-4"
-        style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}
-      >
-        <Link
-          href="/matches"
-          className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted"
-        >
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="text-lg font-extrabold">Match Details</h1>
-      </header>
+  const fixture = fixtures.find((f) => f.id === fixtureId) ?? null;
+  const needsLiveData = fixture?.status === "Live" || fixture?.status === "Completed";
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
-        {status === "loading" && (
-          <Card className="flex items-center justify-center gap-2.5 py-14 text-sm text-muted">
-            <Loader2 size={16} className="animate-spin text-blue" />
-            Loading match…
-          </Card>
-        )}
+  useEffect(() => {
+    if (fixtureId && needsLiveData) loadLive(fixtureId);
+  }, [fixtureId, needsLiveData, loadLive]);
 
-        {status === "error" && (
-          <Card className="flex flex-col items-center gap-2 py-14 text-center">
-            <AlertTriangle size={18} className="text-red" />
-            <p className="text-sm font-semibold">Match not found</p>
-            <p className="text-xs text-muted">This fixture may have been removed.</p>
-          </Card>
-        )}
+  const loadingFixture = fixtureStatus === "idle" || fixtureStatus === "loading";
+  const notFound = fixtureStatus === "ready" && !fixture;
 
-        {status === "ready" && fixture && (
+  if (loadingFixture || notFound || fixtureStatus === "error") {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <ScreenHeader backHref="/matches" title="Match Details" />
+        <ScreenBody className="flex flex-col justify-center">
+          {loadingFixture && <LoadingState label="Loading match…" />}
+          {fixtureStatus === "error" && (
+            <EmptyState icon={AlertTriangle} title="Couldn't load this match" description={fixtureError ?? undefined} tone="danger" />
+          )}
+          {notFound && (
+            <EmptyState
+              icon={SearchX}
+              title="Match not found"
+              description="This fixture may have been removed, or the link is incorrect."
+              action={
+                <Button size="sm" asChild>
+                  <Link href="/matches">Back to Matches</Link>
+                </Button>
+              }
+            />
+          )}
+        </ScreenBody>
+      </div>
+    );
+  }
+
+  if (!fixture) return null;
+
+  // Scheduled fixtures haven't started yet -- teams/XI/toss/openers are still
+  // being set up, so there's no Live/Scorecard/Statistics/Players/Commentary/
+  // Timeline data to show. Keep this exact overview + setup CTA unchanged.
+  if (fixture.status === "Scheduled") {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <ScreenHeader backHref="/matches" title="Match Details" />
+        <ScreenBody>
           <div className="flex flex-col gap-5">
             <Card className="p-5">
               <p className="text-[10.5px] font-semibold uppercase tracking-wide text-wood">{fixture.status}</p>
@@ -109,28 +131,56 @@ export default function MatchDetailsScreen() {
             <Card className="divide-y divide-white/[0.06] px-4">
               <InfoRow icon={Trophy} label="Tournament" value={fixture.tournament.name} />
               <InfoRow icon={MapPin} label="Venue" value={venueLabel(fixture.venue)} />
-              <InfoRow
-                icon={CalendarClock}
-                label="Date & Time"
-                value={`${formatDate(fixture.date)} · ${formatTime(fixture.startTime)}`}
-              />
+              <InfoRow icon={CalendarClock} label="Date & Time" value={`${formatDate(fixture.date)} · ${formatTime(fixture.startTime)}`} />
               <InfoRow icon={Layers} label="Match Type" value={fixture.matchType} />
             </Card>
 
             <Button asChild>
-              {fixture.status === "Completed" ? (
-                <Link href={`/matches/${fixture.id}/scorecard`}>View Scorecard</Link>
-              ) : fixture.status === "Live" ? (
-                <Link href={`/matches/${fixture.id}/live`}>Continue Scoring</Link>
-              ) : (
-                <Link href={setupStepPath(fixture.id, resumeSetupStep(fixture))}>
-                  {fixture.toss ? "View Match Ready" : "Continue to Toss"}
-                </Link>
-              )}
+              <Link href={setupStepPath(fixture.id, resumeSetupStep(fixture))}>{fixture.toss ? "View Match Ready" : "Continue to Toss"}</Link>
             </Button>
           </div>
-        )}
+        </ScreenBody>
       </div>
+    );
+  }
+
+  // Live or Completed -- the tabbed Match Centre hub.
+  const availableTabs = fixture.status === "Live" ? LIVE_TABS : COMPLETED_TABS;
+  const activeTab = tab && availableTabs.some((t) => t.value === tab) ? tab : availableTabs[0].value;
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <ScreenHeader backHref="/matches" title={fixture.name} subtitle={fixture.tournament.name} />
+
+      <div className="flex-none px-5 pb-4">
+        <MatchHeaderCard fixture={fixture} state={state} />
+      </div>
+
+      <Tabs options={availableTabs} value={activeTab} onChange={setTab} />
+
+      <ScreenBody>
+        {(liveStatus === "idle" || liveStatus === "loading") && <LoadingState label="Loading match data…" />}
+
+        {(liveStatus === "error" || liveStatus === "not-started") && (
+          <EmptyState
+            icon={AlertTriangle}
+            title="Couldn't load live data"
+            description={liveError ?? "This match's live data isn't available yet."}
+            tone="danger"
+          />
+        )}
+
+        {liveStatus === "ready" && state && (
+          <>
+            {activeTab === "live" && fixture.status === "Live" && <LiveTab state={state} fixtureId={fixture.id} />}
+            {activeTab === "scorecard" && <ScorecardTab state={state} fixture={fixture} />}
+            {activeTab === "statistics" && <StatisticsTab state={state} />}
+            {activeTab === "players" && <PlayersTab fixture={fixture} state={state} />}
+            {activeTab === "commentary" && <CommentaryTab state={state} />}
+            {activeTab === "timeline" && <TimelineTab fixture={fixture} state={state} />}
+          </>
+        )}
+      </ScreenBody>
     </div>
   );
 }

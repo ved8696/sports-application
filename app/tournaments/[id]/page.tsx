@@ -3,10 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { AlertTriangle, ArrowLeft, Loader2, MoreHorizontal } from "lucide-react";
+import { AlertTriangle, MoreHorizontal, SearchX } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs } from "@/components/ui/tabs";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { Button } from "@/components/ui/button";
+import { EmptyState, LoadingState } from "@/components/ui/empty-state";
+import { ScreenHeader, ScreenBody } from "@/components/mobile/app-screen";
 import { useTournamentStore } from "@/lib/store/tournament-store";
 import { useFixtureStore } from "@/lib/store/fixture-store";
 import { useCricketStore } from "@/lib/store/cricket-store";
@@ -63,46 +66,48 @@ export default function TournamentDetailsPage() {
     [tournament, tournamentFixtures, matches]
   );
 
-  if (status === "loading" || status === "idle") {
+  if (status === "loading" || status === "idle" || status === "error" || !tournament) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <Loader2 size={20} className="animate-spin text-blue" />
-      </div>
-    );
-  }
-
-  if (status === "error") {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center">
-        <AlertTriangle size={18} className="text-red" />
-        <p className="text-sm font-semibold">Couldn&apos;t load this tournament</p>
-        <p className="text-xs text-muted">{error}</p>
-      </div>
-    );
-  }
-
-  if (!tournament) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
-        <p className="text-sm font-semibold">Tournament not found</p>
-        <Link href="/tournaments" className="text-xs font-semibold text-blue">
-          Back to Tournaments
-        </Link>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <ScreenHeader backHref="/tournaments" title="Tournament" />
+        <ScreenBody className="flex flex-col justify-center">
+          {(status === "loading" || status === "idle") && <LoadingState label="Loading tournament…" />}
+          {status === "error" && (
+            <EmptyState icon={AlertTriangle} title="Couldn't load this tournament" description={error ?? undefined} tone="danger" />
+          )}
+          {status === "ready" && !tournament && (
+            <EmptyState
+              icon={SearchX}
+              title="Tournament not found"
+              description="This tournament may have been removed, or the link is incorrect."
+              action={
+                <Button size="sm" asChild>
+                  <Link href="/tournaments">Back to Tournaments</Link>
+                </Button>
+              }
+            />
+          )}
+        </ScreenBody>
       </div>
     );
   }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex flex-none items-center gap-3 px-5 pb-3" style={{ paddingTop: "calc(var(--safe-top) + 20px)" }}>
-        <Link href="/tournaments" className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted">
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="min-w-0 flex-1 truncate text-[15px] font-bold">{tournament.name}</h1>
-        <button type="button" onClick={() => setMenuOpen(true)} className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted" aria-label="More options">
-          <MoreHorizontal size={16} />
-        </button>
-      </header>
+      <ScreenHeader
+        backHref="/tournaments"
+        title={tournament.name}
+        trailing={
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-border bg-surface-2 text-muted"
+            aria-label="More options"
+          >
+            <MoreHorizontal size={16} />
+          </button>
+        }
+      />
 
       <div className="flex-none px-5 pb-3">
         <Card className="flex items-center gap-2.5 p-3">
