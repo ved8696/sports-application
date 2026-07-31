@@ -55,7 +55,7 @@ export const STEP_PATH: Record<WizardStep, string> = {
 };
 
 export const STEP_TITLE: Record<WizardStep, string> = {
-  tournament: "Select Tournament",
+  tournament: "Choose Match Type",
   details: "Match Details",
   rules: "Competition Rules",
   venue: "Venue",

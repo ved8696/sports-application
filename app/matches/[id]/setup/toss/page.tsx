@@ -66,7 +66,7 @@ export default function TossPage() {
       title={SETUP_STEP_TITLE.toss}
       stepIndex={SETUP_STEPS.indexOf("toss")}
       stepCount={SETUP_STEPS.length}
-      backHref={setupStepPath(fixtureId, "captains")}
+      backHref={setupStepPath(fixtureId, "squad")}
       footer={
         <div className="flex flex-col gap-2.5">
           {submitError && (

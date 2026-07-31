@@ -32,32 +32,14 @@ function squadErrors(team: TeamDraft, label: string): string | undefined {
   return undefined;
 }
 
-export function validateSquadStep(draft: SetupDraft): StepErrors {
-  const errors: StepErrors = {};
-  const a = squadErrors(draft.teamA, draft.teamA.name || "Team A");
-  const b = squadErrors(draft.teamB, draft.teamB.name || "Team B");
-  if (a) errors.teamA = a;
-  if (b) errors.teamB = b;
-  return errors;
-}
-
 function xiErrors(xi: XIDraft, squad: TeamDraft, label: string): string | undefined {
   if (xi.players.length !== PLAYING_XI_SIZE) {
-    return `${label} needs exactly ${PLAYING_XI_SIZE} players (${xi.players.length} selected).`;
+    return `${label} needs exactly ${PLAYING_XI_SIZE} players in the Playing XI (${xi.players.length} selected).`;
   }
   if (!xi.players.every((p) => squad.squad.includes(p))) {
     return `${label}'s Playing XI must be chosen from its squad.`;
   }
   return undefined;
-}
-
-export function validatePlayingXIStep(draft: SetupDraft): StepErrors {
-  const errors: StepErrors = {};
-  const a = xiErrors(draft.xiA, draft.teamA, draft.teamA.name || "Team A");
-  const b = xiErrors(draft.xiB, draft.teamB, draft.teamB.name || "Team B");
-  if (a) errors.xiA = a;
-  if (b) errors.xiB = b;
-  return errors;
 }
 
 function captainErrors(xi: XIDraft, label: string): string | undefined {
@@ -72,12 +54,17 @@ function captainErrors(xi: XIDraft, label: string): string | undefined {
   return undefined;
 }
 
-export function validateCaptainsStep(draft: SetupDraft): StepErrors {
+/** Squad size, Playing XI count/membership, and captain/VC/WK checks for one team -- surfaced as a single message so the combined Squad & Playing XI screen can show one error per team at a time. */
+function teamSetupErrors(team: TeamDraft, xi: XIDraft, label: string): string | undefined {
+  return squadErrors(team, label) ?? xiErrors(xi, team, label) ?? captainErrors(xi, label);
+}
+
+export function validateSquadStep(draft: SetupDraft): StepErrors {
   const errors: StepErrors = {};
-  const a = captainErrors(draft.xiA, draft.teamA.name || "Team A");
-  const b = captainErrors(draft.xiB, draft.teamB.name || "Team B");
-  if (a) errors.xiA = a;
-  if (b) errors.xiB = b;
+  const a = teamSetupErrors(draft.teamA, draft.xiA, draft.teamA.name || "Team A");
+  const b = teamSetupErrors(draft.teamB, draft.xiB, draft.teamB.name || "Team B");
+  if (a) errors.teamA = a;
+  if (b) errors.teamB = b;
   return errors;
 }
 
@@ -91,13 +78,23 @@ export function validateTossStep(draft: SetupDraft): StepErrors {
   return errors;
 }
 
+export function validateOpenersStep(draft: SetupDraft): StepErrors {
+  const errors: StepErrors = {};
+  if (!draft.openers.striker) errors.striker = "Select the opening striker.";
+  if (!draft.openers.nonStriker) errors.nonStriker = "Select the opening non-striker.";
+  if (draft.openers.striker && draft.openers.striker === draft.openers.nonStriker) {
+    errors.nonStriker = "Opening non-striker must be different from the striker.";
+  }
+  if (!draft.openers.bowler) errors.bowler = "Select the opening bowler.";
+  return errors;
+}
+
 const STEP_VALIDATORS: Record<SetupStep, (draft: SetupDraft) => StepErrors> = {
   "team-a": validateTeamAStep,
   "team-b": validateTeamBStep,
   squad: validateSquadStep,
-  "playing-xi": validatePlayingXIStep,
-  captains: validateCaptainsStep,
   toss: validateTossStep,
+  openers: validateOpenersStep,
   ready: () => ({}),
 };
 

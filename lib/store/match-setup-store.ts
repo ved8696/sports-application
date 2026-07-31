@@ -8,7 +8,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { initialSetupDraft, type SetupDraft, type TeamDraft, type XIDraft } from "@/lib/matchSetup/types";
+import { initialSetupDraft, type OpenersDraft, type SetupDraft, type TeamDraft, type XIDraft } from "@/lib/matchSetup/types";
 import type { Fixture } from "@/lib/cricket/fixture-types";
 
 interface MatchSetupState {
@@ -19,6 +19,7 @@ interface MatchSetupState {
   setXIA: (xi: Partial<XIDraft>) => void;
   setXIB: (xi: Partial<XIDraft>) => void;
   setToss: (winner: string | null, decision: "bat" | "bowl" | null) => void;
+  setOpeners: (openers: Partial<OpenersDraft>) => void;
   reset: (fixtureId: string) => void;
 }
 
@@ -57,6 +58,7 @@ export const useMatchSetupStore = create<MatchSetupState>()(
       setXIA: (xi) => set((s) => ({ draft: { ...s.draft, xiA: { ...s.draft.xiA, ...xi } } })),
       setXIB: (xi) => set((s) => ({ draft: { ...s.draft, xiB: { ...s.draft.xiB, ...xi } } })),
       setToss: (winner, decision) => set((s) => ({ draft: { ...s.draft, tossWinner: winner, tossDecision: decision } })),
+      setOpeners: (openers) => set((s) => ({ draft: { ...s.draft, openers: { ...s.draft.openers, ...openers } } })),
       reset: (fixtureId) => set({ draft: initialSetupDraft(fixtureId) }),
     }),
     {

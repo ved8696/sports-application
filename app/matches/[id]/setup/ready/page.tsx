@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Loader2, Crown, Shield } from "lucide-react";
+import { AlertTriangle, Loader2, Crown, Shield } from "lucide-react";
 import { WizardShell } from "@/components/mobile/wizard-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ReviewSection, SummaryRow } from "@/components/match-creation/review-section";
 import { useMatchSetupStore } from "@/lib/store/match-setup-store";
 import { useHasHydrated } from "@/lib/store/useHasHydrated";
+import { useLiveScoringStore } from "@/lib/store/live-scoring-store";
 import { useSetupFixture } from "@/lib/matchSetup/useSetupFixture";
 import { guardRedirect } from "@/lib/matchSetup/validation";
 import { SETUP_STEPS, SETUP_STEP_TITLE, setupStepPath } from "@/lib/matchSetup/types";
@@ -20,6 +20,8 @@ export default function MatchReadyPage() {
   const { fixtureId, fixture, fixtureStatus } = useSetupFixture();
   const { draft } = useMatchSetupStore();
   const hasHydrated = useHasHydrated(useMatchSetupStore.persist);
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
 
   useEffect(() => {
     // fixtureStatus "ready" gates this alongside hasHydrated: a tournament
@@ -55,17 +57,43 @@ export default function MatchReadyPage() {
   const [xiA, xiB] = fixture.playingXI ?? [];
   const toss = fixture.toss;
   const battingFirst = toss ? (toss.decision === "bat" ? toss.winner : (toss.winner === teamA?.name ? teamB?.name : teamA?.name)) : undefined;
+  const { openers } = draft;
+
+  async function handleStart() {
+    if (!openers.striker || !openers.nonStriker || !openers.bowler) return;
+    setStarting(true);
+    setStartError(null);
+    await useLiveScoringStore.getState().start(fixtureId, {
+      strikerName: openers.striker,
+      nonStrikerName: openers.nonStriker,
+      bowlerName: openers.bowler,
+    });
+    const { status, error } = useLiveScoringStore.getState();
+    if (status === "error") {
+      setStartError(error ?? "Failed to start the match.");
+      setStarting(false);
+      return;
+    }
+    router.push(`/matches/${fixtureId}/live`);
+  }
 
   return (
     <WizardShell
       title={SETUP_STEP_TITLE.ready}
       stepIndex={SETUP_STEPS.indexOf("ready")}
       stepCount={SETUP_STEPS.length}
-      backHref={setupStepPath(fixtureId, "toss")}
+      backHref={setupStepPath(fixtureId, "openers")}
       footer={
-        <Button asChild>
-          <Link href={`/matches/${fixtureId}/live`}>Start Match</Link>
-        </Button>
+        <div className="flex flex-col gap-2.5">
+          {startError && (
+            <p className="flex items-center gap-1.5 text-xs text-red">
+              <AlertTriangle size={13} /> {startError}
+            </p>
+          )}
+          <Button onClick={handleStart} disabled={starting}>
+            {starting ? "Starting Match…" : "Start Match"}
+          </Button>
+        </div>
       }
     >
       <div className="flex flex-col gap-4 pt-1">
@@ -91,6 +119,12 @@ export default function MatchReadyPage() {
           <SummaryRow label="Tournament" value={fixture.tournament.name} />
           <SummaryRow label="Toss Winner" value={toss?.winner ?? "—"} />
           <SummaryRow label="Batting First" value={battingFirst ?? "—"} />
+        </ReviewSection>
+
+        <ReviewSection title="Opening Players" editHref={setupStepPath(fixtureId, "openers")}>
+          <SummaryRow label="Striker" value={openers.striker ?? "—"} />
+          <SummaryRow label="Non-Striker" value={openers.nonStriker ?? "—"} />
+          <SummaryRow label="Opening Bowler" value={openers.bowler ?? "—"} />
         </ReviewSection>
 
         {[
